@@ -1,0 +1,50 @@
+@CHARSET "UTF-8";
+dl,
+dd,
+dt,
+ul,
+li {
+	list-style: none;
+	}
+thead>tr{
+	background-color: rgba(175,215,237,0.2);
+	}
+	thead>tr>th{
+	font-family:"宋体";
+	font-size: 16px;
+	text-align: center;
+	vertical-align: middle !important;
+}
+	tbody>tr>th{
+	font-family:"宋体";
+	font-size: 16px;
+	text-align: center;
+	vertical-align: middle !important;
+}
+	tbody>tr>td{
+	max-width:200px;
+	font-size: 14px;
+	color:#444;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden; 
+	vertical-align: middle !important;
+}
+	#button1{
+		margin-right: 5px !important;
+	}
+	.table_title{
+	  background: linear-gradient(to bottom, rgb(35, 205, 182), rgb(142, 229, 213), rgb(148, 251, 240), rgb(192, 247, 252), rgb(172, 248, 211));
+	  margin-top: 50px;	
+	  margin-bottom:10px;
+	  border-top-right-radius:5px;
+	  border-top-left-radius:5px;
+	}
+	.table_title>h2{
+	  color:#392f41;
+	  line-height: 50px;
+	  margin-left: 10px;
+	  font-size: 20px;
+	  font-weight: bolder;
+	}

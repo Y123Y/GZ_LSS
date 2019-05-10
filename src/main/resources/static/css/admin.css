@@ -1,0 +1,49 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: "微软雅黑";
+}
+
+body{
+	background-image: url(../images/587843d46b660.jpg);
+}
+
+a{
+	text-decoration: none;
+}
+/***************************************************header*/
+header{
+	height: 50px;
+	/*border: 1px solid red;*/
+}
+
+
+/***************************************************section*/
+section{
+	min-height: 600px;
+	padding: 10px;
+	/*border: 1px solid blue;*/
+}
+
+input.ajust_checkbox{
+	transform: translate(0px, 2px);
+}
+
+#m_see_info_pwd{
+	font-size: 10px;
+	font-weight: 400;
+	margin-left: 5px;
+	color: #2AABD2;
+}
+
+.ajust_table_bg{
+	padding-top: 2px;
+	background-color: rgba(255,255,255,0.8);
+	min-height:550px;
+}
+
+/***************************************************footer*/
+footer{
+	height: 50px;
+	/*border: 1px solid red;*/
+}

@@ -1,0 +1,26 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: "微软雅黑";
+}
+
+body{
+	background-image: url(../images/587843d46b660.jpg);
+}
+
+.ajust_btn{
+	width: 80px;
+	opacity: 1;
+}
+
+.ajust_panel{
+	width: 600px;
+	margin-top: 150px;
+	background-color: rgba(255,255,255,0.45);
+}
+
+.ajust_panel_head{
+}
+
+.ajust_panel_body{
+}

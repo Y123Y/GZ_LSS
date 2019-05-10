@@ -1,0 +1,86 @@
+@CHARSET "UTF-8";
+	table{
+	  width:600px;
+	  margin:20px auto;
+	  background-color: rgba(255,255,255,0.6);	
+	}
+	table tr{
+		margin-top:20px;
+	}
+	 tr>td:nth-child(1){
+	 font-family:'宋体';
+	 font-size:14px;
+	 color:#333;
+	 text-align: right;
+	 padding-right:1px !important;
+	}
+	 tr>td:nth-child(1)>label{
+	 	margin-top:5px;
+	 	font-size:14px;
+	 	line-height: 40px;
+	 }
+	  tr>td:nth-child(2)>button{
+	 	 margin-top:20px;
+	 	 margin-bottom:10px;
+	 }
+	 tr>td:nth-child(3){
+	 	 padding:0px !important;
+	 }
+	 .bg-settig{
+	  padding-top:5px;
+	  padding-bottom:5px;
+      background: url(../images/bg-setting.jpg) no-repeat;	
+      background-size:100% 100%; 
+	 }
+	 #footer{
+	   margin-top: 100px;
+	 }
+	 /*修改密码弹出遮罩层*/
+	 .bg_popmima{
+	   position:fixed;
+	   top:0px;
+	   left:0px;
+	   width: 100%;
+	   height: 100%;
+	   display: none;
+	   background: rgba(0,0,0, 0.8);
+	   z-index: 999;	
+	 }
+	 .popmima{
+	 	position:absolute;
+	 	z-index: 1;
+   	 	width: 40%;
+    	height: 350px;
+   	 	background-color: #FFF;
+    	margin-top: 10em;
+    	margin-left: 30%;
+		border-radius:5px;
+		background: url(../images/bg_poptimg.jpg) no-repeat;	
+     	background-size:100% 100%; 
+	 }
+	 .popmima input{
+	 	width: 300px !important;
+	 	display: inline-block !important;
+	 }
+	 .popmima label{
+	 	color:#c40000;
+	 	font-size: 14px;
+	 	font-weight: normal;
+	 }
+	 .popmima div{
+	   width: 400px;
+	   margin: 30px auto;
+	 }
+	 .popmima h2{
+	 	font-size: 26px;
+	 	margin-left: 10px;
+	 	margin-right: 10px;	 
+	 	text-align: center;
+	 	color:#DC143C;	
+	 }
+	 #close_pop{
+	   position: absolute;
+	   right: 8px;
+	   top: 5px;
+	   cursor: pointer;
+	 }

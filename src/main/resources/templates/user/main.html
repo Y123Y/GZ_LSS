@@ -1,0 +1,573 @@
+<!DOCTYPE>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
+
+    <link th:href="@{/css/maintop.css}" rel="stylesheet">
+    <link th:href="@{/css/usermain.css}" rel="stylesheet">
+
+    <link th:href="@{/css/sweetalert.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sweetalert.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/maintop.js}"></script>
+
+    <title>首页</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}"/>
+    <script type="text/javascript" th:src="@{/js/global.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var totalPage = null;
+            var currentPage = 1;
+            var keyword = $("#keyword");
+            $("#search").submit(function () {
+                if ($.trim(keyword.val()) == "") {
+                    swal("特别提醒", "请输入关键字再搜索相关信息,亲!", "warning");
+                    return false;
+                } else {
+                    //增加等待处理
+                    search();
+                    $(".bg_waitsearch").show();
+                    return false;
+                }
+            });
+
+            function search() {
+                $.ajax({
+                    url: getRealPath() + "/userOperation/selectBooks",
+                    dataType: "json",
+                    data: {
+                        "keyword": keyword.val(),
+                        "pageIndex": currentPage
+                    },
+                    type: "POST",
+                    asyn: true,
+                    success: function (data) {
+
+                        $(".bg_waitsearch").hide();
+                        $("tbody").html("");
+                        if (data == "failed") {
+                            swal("搜索失败！", "没有找到相关书籍信息!", "warning");
+                            return;
+                        }
+                        $.each(data.list, function (i, item) {
+                            $("tbody").append("<tr><td>" + (20 * (currentPage - 1) + i + 1) + "</td>" +
+                                "<td>" + item.book_name + "</td>" +
+                                "<td>" + item.author + "</td>" +
+                                "<td>" + item.publish + " </td>" +
+                                "<td>" + item.publish_year + "</td>" +
+                                "<td>" + item.book_num + "</td>" +
+                                "<td>" + item.holding_num + "</td>" +
+                                "<td>" + item.can_borrow + "</td>" +
+                                "<td>" + "<input value='1' name='number' type='text' class='number form-control'/>" +
+                                "<button id='add' class='btn btn-success btn-sm'>添加</button>"
+                                + "</td></tr>");
+                        });
+
+                        //获取到总页数
+                        totalPage = data.totalPage;
+
+
+                    }, error: function () {
+                        $(".bg_waitsearch").fadeOut("3000", function () {
+                            swal("搜索失败！", "没有您想要的内容或者网络连接中断!", "error");
+                        });
+                    }
+
+                });
+            }
+
+            //上下页
+            $("#Previous").click(function () {
+                if (currentPage <= 1) {
+                    swal("警告", "当前页为首页!", "warning");
+                } else {
+                    currentPage--;
+                    search();
+                    $(".bg_waitsearch").show();
+                }
+            });
+            $("#Next").click(function () {
+                if (currentPage >= totalPage) {
+                    swal("警告", "已经是最后一页了!", "warning");
+                } else {
+                    currentPage++;
+                    search();
+                    $(".bg_waitsearch").show();
+                }
+            });
+
+            $("#tiao_page").click(function () {
+                var input_page = $("#input_page").val();
+                /* 			alert(input_page);
+                            return; */
+                if (input_page > totalPage) {
+                    swal("警告", "超出最大页数范围[1--" + totalPage + "]", "warning");
+                    $("#input_page").val(1);
+                } else {
+                    currentPage = input_page;
+                    search();
+                    $(".bg_waitsearch").show();
+                }
+            });
+            //上下页结束
+
+
+            //判断number是否为数字且是否符合实际
+            $("table").delegate('table tr .number', 'blur', function () {
+                var tr = $(this).parent().parent();//找到自身所在行
+                var td = tr.find("td");//找到tr行td数组
+                var can_borrowNum = td[7].innerHTML;
+                var reg = /^\+?([0-9]{1})|([1-9][0-9]*)$/;
+                var checknum = $(this).val();
+                if (reg.test(checknum) == true) {
+                    if (parseInt(can_borrowNum) < parseInt(checknum)) {
+                        swal("输入提示！", "您输入的数量大于可借数量,请修改!", "warning");
+                        $(this).val(can_borrowNum);
+                    }
+                } else {
+                    swal("输入提示！", "您输入的合法的整型数字,请修改!", "warning");
+                    $(this).val(0);
+                }
+            });
+
+            //选中行添加到购物车
+            $("table").delegate('table tr #add', 'click', function () {
+                var btn = $(this);//找到自身
+                var tr = btn.parent().parent();//找到自身所在行
+                var td = tr.find("td");//找到tr行td数组
+                var number = btn.prev().val();
+                var can_borrowNum = td[7].innerHTML;
+                if (parseInt(number) == 0) {
+                    swal("输入提示！", "数量:" + number, "warning");
+                    return;
+                }
+                if (parseInt(can_borrowNum) < parseInt(number)) {
+                    swal("输入提示！", "数量:" + number + "可借:" + can_borrowNum, "warning");
+                    btn.prev().val(can_borrowNum);
+                    if (parseInt(can_borrowNum) == 0) {
+                        btn.attr("disabled", "disabled");
+                    }
+                    return;
+                }
+                $.ajax({
+                    dataType: "json",
+                    type: "POST", // 提交方式
+                    url: getRealPath() + "/userOperation/addBooktoCart",
+                    data: {
+                        "book_name": td[1].innerHTML,
+                        "author": td[2].innerHTML,
+                        "publish": td[3].innerHTML,
+                        "publish_year": td[4].innerHTML,
+                        "book_num": td[5].innerHTML,
+                        "holding_num": td[6].innerHTML,
+                        "can_borrow": td[7].innerHTML,
+                        "number": number
+                    },
+                    success: function (data) {
+                        if (data == true)
+                            swal("添加成功！", "已经添加到您的购物车了,亲!", "success");
+                        else
+                            swal("添加失败！", "当前网络不稳定,请稍后再试!", "error");
+                    },
+                    error: function (data) {
+                        swal("添加失败！", "当前网络不稳定,请稍后再试!", "error");
+                    }
+                });
+            });
+
+        });
+    </script>
+    <style type="text/css">
+        .bg_waitsearch {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background: rgba(255, 255, 255, 0.6);
+            z-index: 999;
+        }
+
+        /* .bg_wait{
+            position:absolute;
+                 z-index: 1;
+                margin-left: 20%;
+                border-radius:5%;
+                margin-top: 2%;
+                width:800px;
+                height:600px;
+                background:url(../images/bg_wait.gif) no-repeat;
+                opacity:0.8;
+            } */
+
+        .number {
+            width: 50px !important;
+            text-align: center;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .select_addr {
+            width: 180px;
+            height: 30px !important;
+            float: right;
+            margin-right: 10px;
+            display: inline-block;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        .pop_addressDiv {
+            font-size: 14px;
+        }
+
+        .pop_addressDiv:HOVER {
+            cursor: pointer;
+            color: #c40000;
+        }
+
+        .update_address:HOVER {
+            cursor: pointer;
+        }
+
+        /* 弹出遮罩层 */
+        .pop input {
+            display: inline-block;
+        }
+
+        .pop button {
+            width: 200px;
+        }
+
+        .pop a {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        div.dropdown > button {
+            width: 160px !important;
+        }
+
+        div.dropdown > ul > li {
+            width: 160px !important;
+        }
+
+        div.dropdown > ul > li > a {
+            font-size: 14px;
+        }
+
+        div.tishi {
+            position: fixed;
+            width: 80%;
+            left: 10%;
+            top: 45px;
+            color: #c40000;
+            font-size: 16px;
+        }
+
+        div.tishi span {
+            font-size: 20px;
+            color: #0066CC;
+        }
+    </style>
+</head>
+
+<div class="wrap">
+    <div id="header">
+        <div class="top" id="top">
+            <li>
+                <div class="dropdown">
+                    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+                        我的地址
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li class="dropdown-header">
+                            <span style="font-weight: bold; font-size: 13px;">已有地址</span>
+                        </li>
+                        <div th:if="${addresses}" th:each="address:${addresses}">
+                            <li>
+                                <a th:id="${address.address_id }" class="update_address"
+                                   th:text="${address.content}"></a>
+                            </li>
+                        </div>
+                        <div th:unless="${addresses}">
+                            <li role="presentation">
+                                <a href="#">没有地址信息</a>
+                            </li>
+                        </div>
+                        <li class="dropdown-header">
+                            <span style="font-weight: bold; font-size: 13px;">操作</span>
+                        </li>
+
+                        <li role="presentation">
+                            <a class="pop_addressDiv">添加新地址</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <div id="topright">
+                <div th:if="${session.user_session.login_name}">
+                    <li>
+                        <a href="#">欢迎您,<span th:text="${session.user_session.login_name}"></span></a>
+                    </li>
+                </div>
+                <div th:unless="${session.user_session.login_name}">
+                    <li>
+                        <a th:href="@{/user/loginForm}">你好！请登录</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/user/registerForm}">免费注册</a>
+                    </li>
+                </div>
+                <li>|
+                    <a th:href="@{/order/history}">我的订单</a>
+                </li>
+                <li>|
+                    <a href="">收藏夹 <i class="arrow"></i></a>
+                    <ul>
+                        <li><a th:href="@{/order/history}">已借的书籍</a></li>
+                        <li><a href="#">收藏的书籍</a></li>
+                    </ul>
+
+                </li>
+                <li>
+                    <a href="">客服服务<i class="arrow"> </i></a>
+                    <ul>
+                        <li><a href="">书籍跟踪</a></li>
+                        <li><a href="">书籍借阅</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="">网站导航<i class="arrow"> </i></a>
+                    <ul>
+                        <li><a th:href="@{/user/userInfo}">个人中心</a></li>
+                        <li><a href="">业务理赔</a></li>
+                        <li><a href="">客服接待</a></li>
+                        <li><a href="">会员通道</a></li>
+                    </ul>
+                </li>
+                <li>| 关注我们：
+                    <a href=""><img th:src="@{/images/sh1.png}"/></a>
+                </li>
+                <li>
+                    <a href=""><img th:src="@{/images/sh2.png}"/></a>|
+                </li>
+                <li>
+                    <a href="">手机版<img th:src="@{/images/i_tel.png}" style="margin-left: 5px; vertical-align:middle;"/></a>
+                </li>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="search" id="search1">
+        <div id="logo" class="logo">
+            <a href="http://www.lib.ctgu.edu.cn/">
+                <img alt="三峡大学图书馆" th:src="@{/images/logo.png}">
+            </a>
+        </div>
+        <div class="searchDiv" id="navsearch">
+            <form th:action="@{/userOperation/selectBooks}" id="search">
+                <input type="text" id="keyword" name="keyword" placeholder="请输入关键字"
+                       style="font-size: 14px; color:#666; padding-left: 10px">
+                <button id="searchButton" class="searchButton" type="submit">搜索</button>
+            </form>
+            <div class="searchBelow">
+                <span> <a href="#nowhere"> 数学 </a> <span>|</span>
+                </span> <span> <a href="#nowhere"> 人文 </a> <span>|</span>
+                </span> <span> <a href="#nowhere"> 艺术 </a> <span>|</span>
+                </span> <span> <a href="#nowhere"> 哲学 </a></span>
+            </div>
+        </div>
+    </div>
+    <div class="l-width">
+        <table id="tb" class="table table-striped table-bordered table-hover  table-condensed booklist">
+            <thead>
+            <tr>
+                <th>编号</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>出版社</th>
+                <th>出版年</th>
+                <th>索取号</th>
+                <th>馆藏</th>
+                <th>可借</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <!--<div id="pageModel">-->
+            <!--<fkjava:pager-->
+                    <!--pageIndex="1"-->
+                    <!--pageSize="20"-->
+                    <!--recordCount="40"-->
+                    <!--style="digg"-->
+                    <!--submitUrl="${ctx}/employee/selectEmployee?pageIndex={0}"/>-->
+        <!--</div>-->
+        <div style="width: 600px; margin: auto" align="center">
+            <nav>
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous" id="Previous" style="margin-right: 20px;">
+                            <span aria-hidden="true" style="font-size: 16px; color:#337ab7 ">上一页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a style="padding: 1px; margin-top: -1px;">
+                            <input type="text" id="input_page" value="0" class="form-control"
+                                   style="width: 60px; text-align: center; "/>
+                        </a>
+                    <li>
+                    <li>
+                        <a href="#" id="tiao_page" style="margin-right: 10px; margin-left: 20px">
+                            <span aria-hidden="true" style="font-size: 16px; color:#337ab7; ">跳到该页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" aria-label="Next" id="Next">
+                            <span aria-hidden="true" style="font-size: 16px; color:#337ab7 ">下一页</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+
+    <div id="footer">
+        <div class="l-width">
+            <div class="content">
+                <p>Copyright©2017
+                    <a href="http://www.ctgu.edu.cn/" target="_blank">三峡大学</a>
+                    图书馆版权所有　　地址：宜昌市大学路8号　　邮编：443002　　馆长信箱：lib@ctgu.edu.cn　　电话：0717-6392083　　</p>
+            </div>
+        </div>
+    </div>
+    <div id="right_item">
+        <ul>
+            <li><a th:href="@{/user/main}"><img th:src="@{/images/home.png}"/></a>
+                <div class="toggle_title">返回首页</div>
+            </li>
+            <li><a th:href="@{/user/userInfo}"><img th:src="@{/images/geren.png}"/></a>
+                <div class="toggle_title">个人信息</div>
+            </li>
+            <li><a th:href="@{/userOperation/bookCart}"><img th:src="@{/images/shopcart.png}"/></a>
+                <div class="toggle_title">购物车</div>
+            </li>
+            <li><a th:href="@{/order/history}"><img th:src="@{/images/history.png}"/></a>
+                <div class="toggle_title">订单管理</div>
+            </li>
+            <li style="height: 70px;" class="depart"></li>
+            <li><a id="loginout"><img th:src="@{/images/zhuxiao.png}"/></a>
+                <div class="toggle_title">退出登陆</div>
+            </li>
+            <li><a href="#top"><img th:src="@{/images/top01.png}"/></a>
+                <div class="toggle_title return_top">返回顶部</div>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+<div class="bg_waitsearch">
+    <div class="bg_wait img-circle">
+    </div>
+</div>
+
+<div class="bg_pop">
+    <div class="pop">
+        <img alt="关闭窗口" th:src="@{/images/close_pop.png}" id="close_pop" width="20px" height="20px"/>
+        <h2>添加新地址</h2>
+        <div class="address_content">
+            <div><label for="newcontent" class="control-label">地址内容:</label>
+                <input class="form-control" type="text" name="newcontent" id="newcontent"/>
+            </div>
+            <div><label for="newname" class="control-label">收件人:</label>
+                <input class="form-control" type="text" name="newname" id="newname"/>
+            </div>
+            <div><label for="newtel" class="control-label">电&nbsp;&nbsp;话:</label>
+                <input class="form-control" type="text" name="newtel" id="newtel"/>
+            </div>
+        </div>
+        <div align="center" class="btn_address">
+            <button id="addaddr_btn" class="btn btn-success form-control updateuser">添加新地址</button>
+        </div>
+    </div>
+</div>
+<!-- 修改地址操作 -->
+<div class="bg_pop1">
+    <div class="pop1">
+        <img alt="关闭窗口" th:src="@{/images/close_pop.png}" id="close_pop1" width="20px" height="20px"/>
+        <h2>修改地址</h2>
+        <div class="address_content">
+            <div><label for="content" class="control-label">地址内容:</label>
+                <input class="form-control" type="text" name="content" id="content"/>
+            </div>
+            <div><label for="name" class="control-label">收件人:</label>
+                <input class="form-control" type="text" name="name" id="name"/>
+            </div>
+            <div><label for="tel" class="control-label">电&nbsp;&nbsp;话:</label>
+                <input class="form-control" type="text" name="tel" id="tel"/>
+            </div>
+        </div>
+        <div align="center" class="btn_address">
+            <button id="updateaddr_btn" class="btn btn-success form-control updateaddr">修改地址</button>
+            <button id="deleteaddr_btn" class="btn btn-danger form-control deleteaddr">删除地址</button>
+        </div>
+    </div>
+</div>
+<!--每次操作完后的提示消息  -->
+<div class="alert alert-info alert-dismissibl tishi " id="xiaoxi" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    <span id="message" style="font-size: 14px;"></span>
+</div>
+<div th:if="${message}">
+    <div class="alert alert-info alert-dismissibl tishi " role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <span style="font-size: 14px;">${requestScope.message}</span>
+    </div>
+</div>
+<!-- 吸顶 -->
+<script type="text/javascript">
+    var tit = document.getElementById("navsearch");
+    var search = document.getElementById("search");
+    var logo = document.getElementById("logo");
+    //alert(tit);
+    //占位符的位置
+    var rect = tit.getBoundingClientRect();//获得页面中导航条相对于浏览器视窗的位置
+    var inser = document.createElement("div");
+    tit.parentNode.replaceChild(inser, tit);
+    inser.appendChild(tit);
+    inser.style.height = rect.height + "px";
+
+    //获取距离页面顶端的距离
+    var titleTop = tit.offsetLeft;
+    //滚动事件
+    document.onscroll = function () {
+        //获取当前滚动的距离
+        var btop = document.body.scrollTop || document.documentElement.scrollTop;
+        //如果滚动距离大于导航条据顶部的距离
+        if (btop > titleTop) {
+            //为导航条设置fix
+            tit.className = "clearfix fix searchDiv";
+            search.className = "searchfix";
+            logo.className = "logofix";
+        } else {
+            //移除fixed
+            tit.className = "clearfix searchDiv";
+            search.className = "search";
+            logo.className = "logo";
+        }
+    }
+</script>
+</html>

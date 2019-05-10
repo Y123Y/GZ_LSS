@@ -1,0 +1,23 @@
+section{
+	height: 600px;
+	width: 1000px;
+	margin: 0 auto;
+	overflow: hidden;
+	border: 1px solid red;
+}
+
+section>div:first-of-type{
+	float: left;
+	width: 200px;
+	height: 550px;
+	border:  1px solid red;
+}
+
+section>div:last-of-type{
+	float: left;
+	height: 550px;
+	width: 790px;
+	border: 1px solid red;
+}
+
+

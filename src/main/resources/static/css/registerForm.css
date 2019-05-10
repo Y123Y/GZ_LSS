@@ -1,0 +1,113 @@
+@CHARSET "UTF-8";
+	.l-width{
+	 width:1176px;
+	 margin:0 auto;
+	}
+	  #header {
+      position:absolute;
+      left:0px;
+      top:10px;
+      width:100%;
+      border-bottom:2px solid #d0605f;   
+    }
+    #logo{
+      float:left;
+      height:70px;
+      padding:5px 0;
+      line-height:70px;
+      margin-left:30px;
+    }
+    ul,li{
+    	list-style: none;
+    }
+    #top-nav{
+     	float:right;
+    	margin-top:20px;
+    }
+    #top-nav ul>li{
+		float:left;
+		margin-left: 20px;
+    }
+    #header:AFTER{
+    	clear: both;
+    	content:".";
+    	display: block;
+    	width:0;
+    	height:0;
+    	visibility: hidden;
+    }
+
+
+/*注册界面主体  */
+	#body{
+	 background: url(../images/login-bg.jpg) no-repeat center 20px #fff;	
+		}
+    #myTab{
+    	margin: 0 auto;
+    	width:600px;
+    }
+    #myTab>li{
+    	border: none;
+    }
+    #myTab>li>a{
+    	font-size: 18px;
+    	font-weight:bold;
+    	color: #666;
+    }
+	.register-box{
+		width:600px;
+		margin: 0 auto;
+		}
+	.panel-heading>h3{
+		margin-top:0px;
+		margin-bottom:0px;
+		font-weight: bolder;
+		color: #333;
+	}
+	.register-box{
+	background-color: rgba(255,255,255,0.9);
+	}
+	table{
+	  width:568px;	
+	}
+	table tr{
+		margin-top:20px;
+	}
+	 tr>td:nth-child(1){
+	 font-family:'宋体';
+	 color:#333;
+	 text-align: right;
+	 padding-right:1px !important;
+	}
+	 tr>td:nth-child(1)>label{
+	 	margin-top:5px;
+	 	line-height: 40px;
+	 }
+	  tr>td:nth-child(2)>button{
+	 	 margin-top:20px;
+	 	 margin-bottom:10px;
+	 }
+	 tr>td:nth-child(3){
+	 	 padding:0px !important;
+	 }
+	/*尾部*/
+	#footer{
+		position:relative;
+		left:0px;
+		overflow: hidden;
+		bottom:0px;
+		width:100%;
+		height:54px;
+		line-height:48px;
+		background: #f2f2f2;
+		border-top: 2px solid #d0605f;
+		z-index:999;
+		margin-top: 80px;
+	}
+	.content{
+	text-align: center;
+	background: url(../images/footer-bg.png) no-repeat 20px top;
+	}
+	.content p{
+	 margin:0px;
+	}

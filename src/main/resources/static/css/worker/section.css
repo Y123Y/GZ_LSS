@@ -1,0 +1,38 @@
+section {
+	min-height: 100px;
+	min-width: 800px;
+	padding: 2px;
+}
+
+section>div:first-of-type {
+
+}
+
+section>div:first-of-type>div:first-of-type {
+	/*	overflow: hidden;*/
+	height: 55px;
+}
+
+section>div:first-of-type>div:first-of-type>* {
+	float: left;
+	margin-left: 1%;
+}
+
+section>div:first-of-type>div:first-of-type>div:first-of-type{
+	margin-left: 10%;
+}
+
+section>div:first-of-type>div:first-of-type>div:last-of-type {
+	width: 30%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+section>div:first-of-type>div:nth-of-type(2) {
+	min-height: 400px;
+}
+
+section>div:first-of-type>div:last-of-type>nav {
+	position: relative;
+	left: 35%;
+}

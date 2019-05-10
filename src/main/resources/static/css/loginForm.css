@@ -1,0 +1,139 @@
+@CHARSET "UTF-8";
+    body{
+    	color:#333;
+    	font-size:14px;
+    	font-family: Tahoma;
+    }
+    	a:HOVER{
+	text-decoration: none;
+	}
+	.l-width{
+	 width:1176px;
+	 margin:0 auto;
+	}
+    /* 头部样式  */
+    #header {
+      position:absolute;
+      left:0px;
+      top:20px;
+      width:100%;
+      border-bottom:2px solid #d0605f;   
+    }
+    #logo{
+      float:left;
+      height:80px;
+      padding:5px 0;
+      line-height:70px;
+      margin-left:30px;
+    }
+    ul,li{
+    	list-style: none;
+    }
+    #top-nav{
+     	float:right;
+    	margin-top:20px;
+    }
+    #top-nav li{
+    	float:left;
+    	margin-right: 5px;
+    }
+    #top-nav:AFTER{
+   		 clear: both;
+    	content:".";
+    	display: block;
+    	width:0;
+    	height:0;
+    	visibility: hidden;
+    }
+    #header:AFTER{
+    	clear: both;
+    	content:".";
+    	display: block;
+    	width:0;
+    	height:0;
+    	visibility: hidden;
+    }
+    
+    /* 登录表单 */
+    .errormessage{
+       	display:block;
+		margin: 0 auto;
+		padding:0;
+		width:400px;
+	}
+    #body{
+     padding-top:102px;
+     margin:0 auto;
+     background: url(../images/login-bg.jpg) no-repeat center 20px #fff;
+     height: 100%;
+    }
+    .login-box{
+    	margin:0px auto;
+    	height:450px; 
+    }
+    .title{
+     	margin:auto;
+     	margin-top:50px;
+    	width:400px;
+    	border:1px solid #D3D3D3;
+    	background-color: rgba(255,255,255,0.9);
+    }
+    .title>h2{
+    	font-size: 26px;
+    	font-weight:bolder;
+    	color:#333;
+    	margin-top:5px;
+    	margin-left: 10px;
+    }
+    .title:AFTER{
+    	clear: both;
+    	content:".";
+    	display: block;
+    	width:0;
+    	height:0;
+    	visibility: hidden;
+    }
+     .title>a{
+     	margin-top:15px;
+    	margin-right: 10px;
+     }
+    .login-box form{
+        margin:auto;
+        padding:20px 20px;
+    	width:400px;
+    	border:1px solid #D3D3D3;
+    	background-color: rgba(255,255,255,0.9);
+    }
+    .login-box>form label{
+    		height:30px;
+    		padding-top:10px !important;
+    		padding-right:5px !important;
+    }
+    
+    
+    .jz{
+    	margin: 0 auto;
+    	width: 230px;
+    	margin-top:10px;
+    }
+    /*尾部样式  */
+	#footer{
+		position:fixed;
+		left:0px;
+		overflow: hidden;
+		bottom:0px;
+		width:100%;
+		height:54px;
+		line-height:48px;
+		background: #f2f2f2;
+		border-top: 2px solid #d0605f;
+		z-index:999;
+	}
+	.content{
+	text-align: center;
+	background: url(../images/footer-bg.png) no-repeat 20px top;
+	}
+	.content p{
+	 margin:0px;
+	}
+

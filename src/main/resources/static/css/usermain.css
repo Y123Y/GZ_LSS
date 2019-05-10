@@ -1,0 +1,347 @@
+@CHARSET "UTF-8";
+
+.l-width{
+	 width:1176px;
+	 margin:0 auto;
+	}
+	dl,dd,dt,ul,li {
+	
+	list-style: none;
+			}
+	.top li>a>i {
+				display: inline-block;
+				width: 12px;
+				height: 9px;
+				margin: 0;
+				padding: 0;
+				background: 2px 3px url(../images/t_arrow.gif) no-repeat;
+				transition: all 0.4s ;
+	}
+	
+	a{
+    color:#999;
+    text-decoration: none;
+}
+	a:hover{
+    color:#C40000;
+    text-decoration: none;
+	}
+    body {
+        padding:0;
+        margin:0;
+    }
+    #nav {
+        width:100%;
+        height:60px;
+        background:#39f;
+        color:#fff;
+        line-height:60px;
+        text-align:center;
+        padding:0;
+        margin:0;
+        list-style:none;
+    }
+    #nav li {
+        float:left;
+        width:20%;
+        height:60px;
+    }
+    .fix {
+        position:fixed;
+        top:20px;
+        left:425px;
+    }    
+    div.search{
+    	position:relative;
+    	height: 140px;
+    	margin-top: 60px;
+    }
+    .searchfix{
+       position:fixed;
+       top:0px;
+       left:2%;
+	   height:100px;
+       width:96%;
+       background-color:#fff;
+  	   box-shadow:0px 0px 8px rgba(81,81,81,0.8);
+       border-bottom:1px solid #bebebe;
+/*     border-bottom-right-radius:1px;
+	   border-bottom-left-radius:1px;   */
+        
+    }
+    .logo{
+    	position: absolute;
+    	top:-5px;
+    	left:80px;
+    	
+    }
+     .logofix{
+    	position: fixed;
+    	top:18px;
+    	left:70px;
+    	
+    }
+    div.searchDiv{
+    background-color: #ff3c3c;
+    width: 500px;
+    margin: 0px auto;
+    padding: 1px;
+    height: 40px;
+    display: block;
+}
+	div.searchDiv input{
+    width: 390px;
+    border: 1px solid transparent;
+    height: 36px;
+    margin: 1px;
+    outline:none;
+}
+	div.searchDiv button{
+    width: 90px;
+    line-height:35px;
+    margin-bottom:3px;
+    margin-left:5px;  
+    border: 1px solid transparent;
+    background-color: #ff3c3c;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer ;
+    vertical-align: middle;
+}
+	div.searchDiv button:HOVER{	
+	color:#666;
+}
+
+	div.searchBelow{
+    margin-top: 3px;
+    margin-left: -20px;
+}
+	div.searchBelow span{
+    color: #999;
+}
+	div.searchBelow a{
+    padding: 0px 20px 0px 20px;
+    font-size: 14px;
+}	
+/**表单样式**/
+	thead>tr{
+	background-color: rgba(175,215,237,0.2);
+	}
+	thead>tr>th{
+	font-family:"宋体";
+	font-size: 16px;
+	text-align: center;
+}
+	tbody>tr>td{
+	/* 控制td随这内容长度破坏布局!*/
+	max-width:200px;
+	font-size: 14px;
+	color:#444;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden; 
+	vertical-align: middle !important;
+}
+	#button1{
+		margin-right: 5px !important;
+	}
+	.booklist>tbody tr:nth-child(odd){
+		background-color:rgb(175,215,237); 
+	}
+	.booklist>tbody tr:nth-child(odd):HOVER{
+		background-color:rgb(147,224,255); 
+	}
+	.booklist>tbody tr:nth-child(even){
+		background-color:rgb(199,237,233); 
+	}
+	.booklist>tbody tr:nth-child(even):HOVER{
+		background-color:rgb(147,224,255); 
+	}
+	/*footer*/
+		#footer{
+		position:relative;
+		left:0px;
+		overflow: hidden;
+		bottom:0px;
+		width:100%;
+		height:54px;
+		line-height:48px;
+		background: #f2f2f2;
+		margin-top:560px;
+		border-top: 2px solid #d0605f;
+		z-index:999;	
+	}
+	.content{
+	text-align: center;
+	background: url(../images/footer-bg.png) no-repeat 20px top;
+	}
+	.content p{
+	 margin:0px;
+	 font-size: 14px;
+	}
+	/*右边的导航栏目*/
+	#right_item{
+	  position: fixed;
+	  right: 5px;
+	  bottom:60px;
+	  width: 50px;
+	  border:1px solid #333;
+	}
+	#right_item>ul{
+		margin: 0px !important;
+	}
+	#right_item>ul li{	
+	  height:40px;
+	  line-height:40px;
+	  text-align: center;
+	  font-size: 14px; 
+	  color:#fff;
+	  background-color: #000;
+	}
+	#right_item>ul>li>a{
+	 	display: block;
+	 	font-size: 14px;
+	 	color:#fff;
+	 	height:40px;
+	} 
+	#right_item>ul>li>a>img{
+	    margin-top:10px;
+		width: 25px;
+		height: 25px;
+	}
+	
+	#right_item>ul li:HOVER {
+	 background-color: rgba(0,0,0,0.6);
+}
+   #right_item>ul li:HOVER>div{
+    display:block;
+	width: 100px;
+}
+ .depart:HOVER {
+	background-color: #000 !important;
+}
+
+ /*动画提示*/ /*动画提示*/ /*动画提示*/ /*动画提示*/ /*动画提示*/ /*动画提示*/
+ .toggle_title{
+	  position: relative;
+	  right: 100px;
+	  top:-35px;
+	  
+	}
+	.toggle_title{
+	    text-align:center;
+	    display:none;
+	    width: 0px;
+	 	font-size: 14px;
+	    font-weight:bolder;
+	 	color:#fff;
+	 	height:30px;
+	 	line-height:30px;
+	 	cursor: default;
+	 	background-color: rgba(0,0,0,0.6);
+	   border-top-right-radius:10px;
+	   border-bottom-right-radius:10px;
+	 transition-delay:1s;  
+	 transition: all 2s ease;
+	-moz-transition: all 2s ease; /* Firefox 4 */
+	-webkit-transition: all 2s ease; /* Safari 和 Chrome */
+	-o-transition: all 2s ease;
+	 	
+	} 
+	
+/*搜索遮罩*/	
+	.bg_waitsearch{
+	   position:fixed;
+	   top:0px;
+	   left:0px;
+	   width: 100%;
+	   height: 100%;
+	   display: none;
+	   background: rgba(255,255,255, 0.6);
+	   z-index: 999;	
+	}
+.bg_wait{
+	position:absolute;
+	 	z-index: 1;
+    	margin-left: 20%;
+		border-radius:5%;
+		margin-top: 2%;
+		width:800px;
+		height:600px;
+		background:url(../images/bg_wait.gif) no-repeat;
+		opacity:0.8;
+	}
+
+.number{
+	width: 50px !important;
+	text-align: center;
+	display: inline-block;
+	margin-right: 5px;
+}
+.select_addr{	
+	width: 140px;
+	max-width:200px;
+	height:26px !important;
+	float: right;
+	display: inline-block;
+}
+.pop_addressDiv{
+  cursor: pointer;
+}
+
+/*地址遮罩层*/
+ .bg_pop{
+	   position:fixed;
+	   top:0px;
+	   left:0px;
+	   width: 100%;
+	   height: 100%;
+	   display: none;
+	   background: rgba(0,0,0, 0.8);
+	   z-index: 999;	
+	 }
+	 .pop{
+	 	position:absolute;
+	 	z-index: 1;
+   	 	width: 40%;
+    	height: 350px;
+   	 	background-color: #FFF;
+    	margin-top: 20px;
+    	margin-left: 30%;
+		border-radius:5px;
+		background: url(../images/bg_poptimg.jpg) no-repeat;	
+     	background-size:100% 100%; 
+	 }
+	 .pop input{
+	 	width: 300px !important;
+	 	display: inline-block !important;
+	 }
+	 .pop label{
+	 	color:#c40000;
+	 	font-size: 14px;
+	 	font-weight: normal;
+	 	margin-left: 5px;
+	 	margin-right: 5px;
+	 	width: 60px;
+	 }
+	 .pop div{
+	   width: 450px;
+	   margin: 30px auto;
+	 }
+	 .pop h2{
+	 	font-size: 26px;
+	 	margin-left: 10px;
+	 	margin-right: 10px;	 
+	 	text-align: center;
+	 	color:#DC143C;
+	 	margin-top: 40px;
+	 	margin-bottom: 20px;	
+	 }
+	 #close_pop{
+	   position: absolute;
+	   right: 8px;
+	   top: 5px;
+	   cursor: pointer;
+	 }
