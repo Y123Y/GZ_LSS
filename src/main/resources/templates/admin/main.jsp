@@ -1,17 +1,15 @@
 <!DOCTYPE html>
-<html>
-
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 	<head>
 		<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script type="text/javascript" src="${ctx }/js/jquery-3.3.1.min.js"></script>
-		<link rel="stylesheet" href="${ctx }/css/bootstrap/bootstrap.min.css" />
-		<script type="text/javascript" src="${ctx }/js/bootstrap/bootstrap.min.js"></script>
-		<link rel="stylesheet" href="${ctx }/css/admin.css" />
-		<script type="text/javascript" src="${ctx }/js/admin.js"></script>
-
+		<script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>
+		<link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
+		<script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
+		<link th:href="@{/css/admin.css}" rel="stylesheet">
+		<script th:src="@{/js/admin.js}"></script>
 		<title>网站后台管理</title>
 	</head>
 

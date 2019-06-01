@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html>
-
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script type="text/javascript" src="${ctx }/js/jquery-3.3.1.min.js"></script>
-		<link rel="stylesheet" href="${ctx }/css/bootstrap/bootstrap.min.css" />
-		<script type="text/javascript" src="${ctx }/js/bootstrap/bootstrap.min.js"></script>
-		<link rel="stylesheet" href="${ctx }/css/admin_login.css" />
+		<script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>
+		<link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
+		<script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
+		<link th:href="@{/css/admin_login.css}" rel="stylesheet">
 		<title>网站后台管理</title>
 	</head>
 
@@ -19,7 +18,7 @@
 				<h3 class="h4">网站后台管理登录</h3>
 			</div>
 			<div class="panel-body ajust_panel_body">
-				<form class="form-horizontal" method="post" action="${ctx }/admin/login">
+				<form class="form-horizontal" method="post" action="@{/admin/login}">
 					<div class="form-group">
 						<label for="inputOldPassword" class="col-sm-2 control-label">用户名</label>
 						<div class="col-sm-10">

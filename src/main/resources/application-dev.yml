@@ -10,7 +10,7 @@ spring:
   messages:
     basename: static/messages/messages
 mybatis:
-  type-aliases-package: com.gz.example.lss.pojo
+  type-aliases-package: com.gz.lss.pojo
 logging:
   level:
-    com.gz.example.demo.dao: debug
+    com.gz.lss.dao: debug

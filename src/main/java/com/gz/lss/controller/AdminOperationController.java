@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gz.lss.common.ResultGenerator;
+import com.gz.lss.common.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,9 +50,9 @@ public class AdminOperationController {
 	 */
 	@RequestMapping("/getWorkers")
 	@ResponseBody
-	public String getWorkers() {
+	public ResultMsg getWorkers() {
 		List<Tb_worker> workers = adminOperationService.selectWorker();
-		return JSON.toJSONString(workers);
+		return ResultGenerator.genSuccessResultMsg(workers);
 	}
 	
 	/**

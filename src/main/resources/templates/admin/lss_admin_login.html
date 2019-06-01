@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>后台管理登录</title>
+		<script th:src="@{/js/vue.min.js}"></script>
+		<script th:src="@{/js/admin_login.js}"></script>
+		<link rel="stylesheet" th:href="@{/css/admin_login.css}" />
+	</head>
+	<body>
+		<div id="app">
+			<form  th:action="@{/admin/login}" method="post">
+				<h4>后台登录</h4>
+				<div class="inputGroup">
+					<span>Account</span>
+					<input type="text" v-model="account" name="account" />
+				</div>
+				<div class="inputGroup">
+					<span>Password</span>
+					<input type="password" v-model="password"  name="password" />
+				</div>
+				<input type="submit" @click="login"  value="登录" />
+			</form>
+			<div id="decorate"></div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>后台管理</title>
+		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+		<script th:src="@{/js/vue.min.js}"></script>
+		<script th:src="@{/js/admin_main.js}"></script>
+		<link rel="stylesheet" th:href="@{/css/admin.css}" />
+	</head>
+	<body>
+		<div id="app">
+			<div id="left-div">
+				<header>
+					LSS-Admin
+				</header>
+				<ul>
+					<li v-for="(item, index) of left_lists" :key="index" @click="left_click(index)">{{item.fun_name}}</li>
+				</ul>
+			</div>
+			<div id="right-div">
+				<ul>
+					<li>{{admin_info.name}}</li>
+					<div id="right-div-ul-tip">
+						<div data-toggle="modal" data-target="#update_info_modal">
+							修改信息
+						</div>
+						<div @click="logout_click">
+							退出登录
+						</div>
+					</div>
+					<li></li>
+				</ul>
+				<section>
+					<div v-show="show_workers" id="display_workers">
+						<form class="search_form" role="form">
+							<div class="input-group col-lg-6">
+								<input type="text" class="form-control" placeholder="按照名字 / id / 职位来搜索工作人员">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button">Go!</button>
+								</span>
+							</div><!-- /input-group -->
+						</form>
+						<table class="table table-hover">
+							<thead>
+								<tr class="table-active">
+									<th v-for="(item, index) of worker_cols" :key="index">{{item}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="(item, index) of workers" :key="index">
+									<td>{{item.worker_id}}</td>
+									<td>{{item.name}}</td>
+									<td>{{item.identity}}</td>
+									<td>{{item.tel}}</td>
+									<td>{{item.login_name}}</td>
+									<td>
+										<button type="button" class="btn btn-info" @click="update_worker_btn(item.worker_id)">删除</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div v-show="show_admins" id="display_admins">
+						<form class="search_form" role="form">
+							<div class="input-group col-lg-6">
+								<input type="text" class="form-control" placeholder="按照账号 / id / 姓名来搜索管理人员">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button">Go!</button>
+								</span>
+							</div><!-- /input-group -->
+						</form>
+						<table class="table table-hover">
+							<thead>
+								<tr class="table-active">
+									<th v-for="(item, index) of admin_cols" :key="index">{{item}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="(item, index) of admins" :key="index">
+									<td>{{item.admin_id}}</td>
+									<td>{{item.account}}</td>
+									<td>{{item.name}}</td>
+									<td>
+										<button type="button" class="btn btn-info" @click="update_admin_btn(item.admin_id)">删除</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div v-show="show_examine" id="display_examine">
+						<form class="search_form" role="form">
+							<div class="input-group col-lg-6">
+								<input type="text" class="form-control" placeholder="">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button">Go!</button>
+								</span>
+							</div><!-- /input-group -->
+						</form>
+						<table class="table table-hover">
+							<thead>
+								<tr class="table-active">
+									<th v-for="(item, index) of examine_cols" :key="index">{{item}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="(item, index) of examines" :key="index">
+									<td>{{item.review_id}}</td>
+									<td>{{item.worker_id}}</td>
+									<td>{{item.current}}</td>
+									<td>{{item.want}}</td>
+									<td>{{item.descript}}</td>
+									<td>{{item.state}}</td>
+									<td>
+										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, true)">通过</button>
+										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, false)">驳回</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+
+
+				<!-- 模态框（Modal） -->
+				<div class="modal fade" id="update_info_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+				 aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="myModalLabel">修改个人信息</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							</div>
+							<div class="modal-body">
+								<div class="input-group col-8  my-modal-col">
+									<span class="my-modal-span">&nbsp;&nbsp;&nbsp;姓名&nbsp;&nbsp;&nbsp;</span>
+									<input type="text" class="form-control" aria-label="...">
+								</div>
+								<div class="input-group col-9 my-modal-col">
+									<span class="my-modal-span">&nbsp;&nbsp;&nbsp;密码&nbsp;&nbsp;&nbsp;</span>
+									<input type="text" class="form-control" aria-label="...">
+								</div>
+								<div class="input-group col-9  my-modal-col">
+									<span class="my-modal-span">确认密码</span>
+									<input type="text" class="form-control" aria-label="...">
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								<button type="button" class="btn btn-primary">提交更改</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div>
+				<!-- /.modal -->
+			</div>
+		</div>
+	</body>
+</html>
