@@ -7,8 +7,6 @@ public class ResultMsg {
     private String message;
     private Object data;
 
-
-
     public Integer getCode() {
         return code;
     }

@@ -35,4 +35,26 @@ public interface WorkerOperationService {
 	 * @return
 	 */
 	Tb_books selectBookById(Integer books_id);
+
+	/* ================================================================================= */
+
+	/**
+	 * 获取所有状态信息
+	 * @return
+	 */
+	List<Tb_state> getStates();
+
+	/**
+	 * 根据身份返回能查看的图书列表
+	 * @param identity
+	 * @return
+	 */
+	List<Tb_books> selectBooksByIdentity(Integer identity);
+
+	/**
+	 * 根据订单查找图书
+	 * @param orderId
+	 * @return
+	 */
+	List<Tb_books> getBooksByOrderId(Integer orderId);
 }

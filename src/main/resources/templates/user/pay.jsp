@@ -240,7 +240,7 @@
  		<img alt="关闭窗口" src="${ctx}/images/close_pop.png" id="close_pop" width="20px" height="20px"/>
  	    <h2 >添加新地址</h2>
  	    <form action="${ctx}/address/addAddress" method="post">
- 	    <div id="address_content"> 		
+ 	    <div id="address_content">
  		<div><label for="content" class="control-label">地址内容:</label>	
  		<input class="form-control" type="text" name="content" id="content"/>
  		</div>

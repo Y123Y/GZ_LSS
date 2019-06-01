@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gz.lss.entity.OrderInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,15 +95,24 @@ public class OrderServiceImpl implements OrderService {
 		return b;
 	}
 
+	/* ===================================== worker ============================================= */
+
 	@Override
 	public Boolean setOrderState(Integer order_id, Integer state) {
-		Boolean b=false;
+		Boolean b = false;
 		try {
-			b=dao.updateState(order_id,state);
+			Tb_order order = dao.selectOrderById(order_id);
+			if (!order.getState().equals(state)) {
+				b = dao.updateState(order_id,state);
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			b=false;
 		}
 		return b;
+	}
+
+	@Override
+	public List<OrderInfo> selectAllOrder() {
+		return dao.selectAllOrder();
 	}
 }

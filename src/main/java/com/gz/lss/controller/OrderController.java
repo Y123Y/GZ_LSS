@@ -5,10 +5,14 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import com.gz.lss.common.ResultGenerator;
+import com.gz.lss.common.ResultMsg;
+import com.gz.lss.entity.OrderInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -31,7 +35,6 @@ public class OrderController {
 	
 	/**
 	 * 下单
-	 * @param order	订单信息
 	 * @return
 	 */
 	@RequestMapping("/placeOrder")
@@ -108,4 +111,5 @@ public class OrderController {
 		
 		return "forward:history";
 	}
+
 }
