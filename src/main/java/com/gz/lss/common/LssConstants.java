@@ -32,9 +32,9 @@ public class LssConstants {
 	public static final String WORKERINFO = "worker/info";			//信息页
 	
 	//管理员页面
-	public static final String ADMINLOGIN = "admin/loginForm";			//登录页
-	public static final String ADMINMAIN = "admin/main";			//首页
-	
+	public static final String ADMINLOGIN = "admin/lss_admin_login";			//登录页     			@gz
+	public static final String ADMINMAIN = "admin/lss_admin";			//首页							@gz
+
 	// 用户的session对象
 	public static final String USER_SESSION = "user_session";
 	public static final String WORKER_SESSION = "worker_session";

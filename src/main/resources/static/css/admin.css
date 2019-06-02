@@ -1,49 +1,149 @@
 *{
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	font-family: "微软雅黑";
 }
-
-body{
-	background-image: url(../images/587843d46b660.jpg);
+#app{
+	min-width: 1200px;
+	min-height: 750px;
+	position: relative;
+	overflow: hidden;
+}
+#left-div {
+	background-color: #00142a;	
+	width: 256px!important;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
 }
 
-a{
-	text-decoration: none;
+#left-div > header{
+	height: 64px;
+	line-height: 64px;
+	background: #002140;
+	color: #fff;
+	text-align: center;
+	font-size: 20px;
+	font-weight: 600;
+	position: relative;
 }
-/***************************************************header*/
-header{
-	height: 50px;
-	/*border: 1px solid red;*/
+
+#left-div > ul{
+	padding-top: 20px;
+	list-style: none;
+    position: relative;
+	background-color: rgb(0, 20, 42);
+}
+
+#left-div > ul > li{
+	list-style: none;
+	/* padding-left: 20px; */
+	height: 56px;
+    line-height: 56px;
+	padding-left: 25px;
+    color: rgba(255, 255, 255, 0.65);
+    background-color: rgb(0, 20, 42);
 }
 
 
-/***************************************************section*/
-section{
-	min-height: 600px;
-	padding: 10px;
-	/*border: 1px solid blue;*/
+#left-div > ul > li:hover{
+	background: #002140;
 }
 
-input.ajust_checkbox{
-	transform: translate(0px, 2px);
+#right-div{
+	min-height: 800px;
+	padding-left: 256px;
+	overflow: hidden;
+	/* background-color: #0069D9; */
 }
 
-#m_see_info_pwd{
-	font-size: 10px;
-	font-weight: 400;
-	margin-left: 5px;
-	color: #2AABD2;
+#right-div > ul{
+	height: 65px;
+	background-color: #FFFFFF;
+	box-shadow:2px 2px 3px gray;
+	list-style: none;
+	padding-right: 30px;
+	padding-top: 25px;
+	position: relative;
 }
 
-.ajust_table_bg{
+#right-div > ul > li{
+	cursor: pointer;
+	float: right;
+	margin-right: 5px;
+	height: 25px;
+	min-width: 50px;
+}
+
+#right-div > ul > li:first-of-type{
+	background-image: url(../images/info.png);
+	background-repeat: no-repeat;
+	background-size: 24px 24px;
+	padding-left: 30px;
+	/* background-position: 5px; */
+}
+
+#right-div > ul > li:first-of-type:hover +div{
+	display: block;
+}
+
+#right-div > ul > li:last-of-type{
+	background-image: url(../images/email.png);
+	background-repeat: no-repeat;
+	background-position-y:2px;
+	background-size: 25px 20px;
+}
+
+#right-div-ul-tip{
 	padding-top: 2px;
-	background-color: rgba(255,255,255,0.8);
-	min-height:550px;
+	width: 80px;
+	/* height: 70px; */
+	position: absolute;
+	top: 50px;
+	right: 30px;
+	border: 1px solid #555;
+	border-radius: 4px;
+	background-color: #FFFFFF;
+	display: none;
+	z-index: 1;
+}
+#right-div-ul-tip:hover{
+	display: block;
 }
 
-/***************************************************footer*/
-footer{
-	height: 50px;
-	/*border: 1px solid red;*/
+#right-div-ul-tip > div{
+	padding-left: 10px;
+	font-size: 13px;
+	cursor:pointer;
+	line-height: 30px;
+	border-bottom: 1px solid #555 ;
+}
+
+	
+#right-div-ul-tip > div:hover{
+	background-color: #F9F9F9;
+}
+
+
+#right-div > section{
+	padding: 5px;
+}
+
+.search_form{
+	padding-top: 30px;
+	padding-bottom: 10px;
+	padding-left: 200px;
+}
+
+.my-modal-span{
+	font-size: 12;
+	margin-right: 10px;
+	margin-left: 20px;
+	padding-top: 10px;
+}
+
+.my-modal-col{
+	margin-bottom: 10px;
 }

@@ -41,11 +41,11 @@ public class AdminController {
 			admin.setAdmin_id(currentadmin.getAdmin_id());
 			admin.setAccount(currentadmin.getAccount());
 			session.setAttribute(LssConstants.ADMIN_SESSION, admin);
-			mv.setViewName("redirect:/"+LssConstants.ADMINMAIN);
+			mv.setViewName(LssConstants.ADMINMAIN);
 		}else {
 			//登录失败
 			mv.addObject("message", "登录失败，用户名或密码错误");
-			mv.setViewName("forward:/"+LssConstants.ADMINLOGIN);
+			mv.setViewName(LssConstants.ADMINLOGIN);
 		}
 		
 		return mv;
@@ -59,17 +59,17 @@ public class AdminController {
 	public String adminLoginForm() {
 		return LssConstants.ADMINLOGIN;
 	}
-	
+
 	/**
 	 * 跳转到管理员主页
 	 * @return
 	 */
-	@RequestMapping("/main")
-	public String adminMain(HttpSession session, Model model) {
-		Tb_admin currentAdmin = (Tb_admin) session.getAttribute(LssConstants.ADMIN_SESSION);
-		Tb_admin admin = adminService.selectAdminById(currentAdmin.getAdmin_id());
-		model.addAttribute("admin", admin);
+	@RequestMapping("/mainManage")
+	public String adminMain() {
+
+		System.out.println("test main page");
 		return LssConstants.ADMINMAIN;
+
 	}
 	
 	/**
@@ -89,7 +89,6 @@ public class AdminController {
 	
 	/**
 	 * 返回管理员信息
-	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/adminInfo")

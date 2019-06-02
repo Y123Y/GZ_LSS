@@ -1,6 +1,7 @@
 package com.gz.lss.service.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -84,9 +85,13 @@ public class AdminOperationServiceImpl implements AdminOperationService {
 		List<Tb_worker> list=null;
 		try {
 			list=workerDao.selects();
+			Iterator<Tb_worker> iter = list.iterator();
+			while(iter.hasNext()){
+				Tb_worker wor = iter.next();
+				wor.setPasswd("");
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			list=null;
 		}
 		return list;
 	}
