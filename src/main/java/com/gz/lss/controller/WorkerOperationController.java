@@ -77,6 +77,9 @@ public class WorkerOperationController {
 		for (int i = 0; i < books_id.length; i++) {
 			Integer bookId = books_id[i];
 			if(!workerOperationService.changBookState(bookId, state_id)) {
+				if (i == 0) {
+					return ResultGenerator.genFailResultMsg("状态更新失败");
+				}
 				return ResultGenerator.genFailResultMsg("成功更新" + i + "本书的状态，还有" + (books_id.length - i) + "本书更新失败");
 			}
 		}
