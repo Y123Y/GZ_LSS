@@ -1,13 +1,34 @@
 package com.gz.lss.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.gz.lss.entity.WorkerExamine;
 import com.gz.lss.pojo.Tb_admin;
 import com.gz.lss.pojo.Tb_review;
 import com.gz.lss.pojo.Tb_worker;
 import com.gz.lss.util.tag.PageModel;
 
 public interface AdminOperationService {
+
+	/**
+	 * 重置工作人员的密码
+	 * @return
+	 */
+	Boolean ressetPasswordOfWorker(Integer worker_id);
+
+	/**
+	 * 获取状态标识和用户身份标识的键值对信息
+	 * @return
+	 */
+	Map<String, Object> getStringAndCode();
+
+	/**
+	 * 根据审核信息的状态获取所有的审核信息
+	 * @return
+	 */
+	List<WorkerExamine> getExamineOfNeed();
+
 	/**
 	 * 根据状态获取用户身份请求
 	 * @param state	状态(12 审核中, 13 通过, 14 未通过)
@@ -35,7 +56,6 @@ public interface AdminOperationService {
 	
 	/**
 	 * 获取所有工作人员信息
-	 * @param identity
 	 * @return
 	 */
 	List<Tb_worker> selectWorker();

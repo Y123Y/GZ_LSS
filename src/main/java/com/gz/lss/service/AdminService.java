@@ -17,7 +17,7 @@ public interface AdminService {
 	 * @param newPasswd	新密码
 	 * @return
 	 */
-	Boolean updatePasswd(String account, String oldPasswd, String newPasswd);
+	Boolean updatePasswd(Integer admin_id, String oldPasswd, String newPasswd);
 	
 	/**
 	 * 根据管理员ID返回用户信息
@@ -32,11 +32,12 @@ public interface AdminService {
 	 * @return	存在返回管理员信息, 不存在返回NULL
 	 */
 	Tb_admin selectAdminByAccount(String account);
-	
+
 	/**
-	 * 更新管理员信息
-	 * @param admin	管理员信息
+	 * 修改管理员姓名
+	 * @param admin_id
+	 * @param name
 	 * @return
 	 */
-	Boolean updateAdmin(Tb_admin admin);
+	Boolean upadteAdminName(Integer admin_id, String name);
 }

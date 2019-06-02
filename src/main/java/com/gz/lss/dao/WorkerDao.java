@@ -56,7 +56,16 @@ public interface WorkerDao {
 	 */
 	@Select("select * from "+LssConstants.TBWORKER+" where login_name=#{loginName} ")
 	public Tb_worker selectByLogin(String loginName) throws Exception;
-	
+
+	/**
+	 * 通过id查找姓名
+	 * @param worker_id
+	 * @return
+	 * @throws Exception
+	 */
+	@Select("select name from " + LssConstants.TBWORKER + " where worker_id = #{worker_id}")
+	public String selectNameById(Integer worker_id) throws Exception;
+
 	/**
 	 * 
 	 * @param worker
