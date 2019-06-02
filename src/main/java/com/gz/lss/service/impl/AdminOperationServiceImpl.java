@@ -14,6 +14,7 @@ import com.gz.lss.dao.AdminDao;
 import com.gz.lss.dao.ReviewDao;
 import com.gz.lss.dao.WorkerDao;
 import com.gz.lss.service.AdminOperationService;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Service
 @Transactional
@@ -121,6 +122,9 @@ public class AdminOperationServiceImpl implements AdminOperationService {
 		}catch (Exception e){
 			e.printStackTrace();
 			res = false;
+		}
+		if ( ! res ){
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		}
 		return res;
 	}

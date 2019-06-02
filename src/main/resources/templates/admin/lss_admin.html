@@ -76,8 +76,8 @@
 									<td>{{item.description}}</td>
 									<td>{{item.state}}</td>
 									<td>
-										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, true)">通过</button>
-										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, false)">驳回</button>
+										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, true, true)">通过</button>
+										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, false, true)">驳回</button>
 									</td>
 								</tr>
 							</tbody>
@@ -101,15 +101,15 @@
 								</div>
 								<div class="input-group col-9 my-modal-col">
 									<span class="my-modal-span">旧的密码</span>
-									<input v-model="admin_info.oldPassword" type="text" class="form-control" aria-label="...">
+									<input v-model="admin_info.oldPassword" type="password" class="form-control" aria-label="...">
 								</div>
 								<div class="input-group col-9 my-modal-col">
 									<span class="my-modal-span">新的密码</span>
-									<input v-model="admin_info.newPassword" type="text" class="form-control" aria-label="...">
+									<input v-model="admin_info.newPassword" type="password" class="form-control" aria-label="...">
 								</div>
 								<div class="input-group col-9  my-modal-col">
 									<span class="my-modal-span">确认密码</span>
-									<input v-model="admin_info.sure_password" type="text" class="form-control" aria-label="...">
+									<input v-model="admin_info.sure_password" type="password" class="form-control" aria-label="...">
 								</div>
 							</div>
 							<div class="modal-footer">

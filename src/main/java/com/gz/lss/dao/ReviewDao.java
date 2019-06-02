@@ -88,7 +88,7 @@ public interface ReviewDao {
 	 * @return
 	 * @throws Exception
 	 */
-	@Select("select * from" + LssConstants.TBREVIEW + " where review_id = #{review_id}")
+	@Select("select * from " + LssConstants.TBREVIEW + " where review_id = #{review_id}")
 	public Tb_review selectById(Integer review_id) throws Exception;
 	
 }

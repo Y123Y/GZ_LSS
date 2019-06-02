@@ -18,15 +18,15 @@ $(document).ready(function () {
         el: '#app',
         data: window.datas,
         created: function () {
-            this.url_pre = this.get_preurl()
+            this.url_pre = '../'
             /* 初始化登录名*/
             this.admin_info.name = $('#info_name').text();
             /* 初始化标识符 */
-            this.inti_identities_states(false);
+            this.inti_identities_states(true);
             /* 初始化工作人员管理信息 */
-            this.workers = this.get_all_workers(false);
+            this.workers = this.get_all_workers(true);
             /* 初始化工作人员审核信息 */
-            this.examines = this.get_all_examines(false)
+            this.examines = this.get_all_examines(true)
         },
         methods: {
 
@@ -216,7 +216,7 @@ $(document).ready(function () {
             },
 
             /* 修改管理人员信息 */
-            update_examine_btn: function (id, sure) {
+            update_examine_btn: function (id, sure, style) {
                 $.ajax({
                     type: "post",
                     url: window.datas.url_pre + "adminOperation/handleExamine",
