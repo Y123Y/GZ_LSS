@@ -112,11 +112,14 @@ public class WorkerController {
 		String worker_name = (String) request.getAttribute(LssConstants.TOKEN_PAYLOAD_KEY);
 
 		Tb_worker worker = workerService.selectWorkerByLoginName(worker_name);
-		
-		worker.setPasswd(null);
-		worker.setSecret_key(null);
-		
-		return ResultGenerator.genSuccessResultMsg(worker);
+		if (worker != null) {
+			worker.setPasswd(null);
+			worker.setSecret_key(null);
+
+			return ResultGenerator.genSuccessResultMsg(worker);
+		} else {
+			return ResultGenerator.genFailResultMsg("获取信息失败");
+		}
 	}
 	
 	/**

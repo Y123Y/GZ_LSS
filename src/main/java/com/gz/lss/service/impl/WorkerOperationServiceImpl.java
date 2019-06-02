@@ -116,6 +116,11 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 		return true;
 	}
 
+	/**
+	 * 获取所有状态信息
+	 *
+	 * @return
+	 */
 	@Override
 	public List<Tb_state> getStates() {
 		List<Tb_state> states = null;
