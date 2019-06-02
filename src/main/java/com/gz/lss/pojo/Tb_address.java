@@ -20,7 +20,6 @@ public class Tb_address implements Serializable {
 	private String tel;
 	
 	public Tb_address() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getAddress_id() {

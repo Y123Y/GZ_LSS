@@ -13,7 +13,6 @@ import com.gz.lss.dao.AdminDao;
 import com.gz.lss.dao.ReviewDao;
 import com.gz.lss.dao.WorkerDao;
 import com.gz.lss.service.AdminOperationService;
-import com.gz.lss.util.tag.PageModel;
 
 @Service
 @Transactional
@@ -95,27 +94,6 @@ public class AdminOperationServiceImpl implements AdminOperationService {
 	}
 
 	@Override
-	public List<Tb_review> getAllIdentityRequest(Integer state, PageModel pageModel){
-		List<Tb_review> list=null;
-		try {
-			Integer count=reviewDao.countByState(state);
-			if(count>0) {
-				pageModel.setRecordCount(count);
-				Map<String,Object> map=new HashMap<String , Object>();
-				map.put("state", state);
-				map.put("pageModel", pageModel);
-				list=reviewDao.selectsByStateWithPage(map);
-			}else {
-				list=reviewDao.selectsByState(state);
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-			list=null;
-		}
-		return list;
-	}
-
-	@Override
 	public Boolean passIdentityRequest(Integer review_id){
 		try {
 			reviewDao.passReview(review_id);
@@ -164,6 +142,7 @@ public class AdminOperationServiceImpl implements AdminOperationService {
 		Boolean b=false;
 		try {
 			b=workerDao.delete(worker_id);
+
 		}catch(Exception e) {
 			e.printStackTrace();
 			b=false;
@@ -173,24 +152,26 @@ public class AdminOperationServiceImpl implements AdminOperationService {
 
 	@Override
 	public Boolean addAdmin(Tb_admin admin) {
-		Boolean b=false;
+		Boolean b;
 		try {
-			b=adminDao.insert(admin);
+			adminDao.insert(admin);
+			b = true;
 		}catch(Exception e) {
 			e.printStackTrace();
-			b=false;
+			b = false;
 		}
 		return b;
 	}
 
 	@Override
 	public Boolean deleteAdmin(Integer admin_id) {
-		Boolean b=false;
+		Boolean b;
 		try {
-			b=adminDao.delete(admin_id);
+			adminDao.delete(admin_id);
+			b = true;
 		}catch(Exception e) {
 			e.printStackTrace();
-			b=false;
+			b = false;
 		}
 		return b;
 	}

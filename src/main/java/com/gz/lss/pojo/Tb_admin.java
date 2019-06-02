@@ -19,7 +19,6 @@ public class Tb_admin implements Serializable {
 	private String name;
 	
 	public Tb_admin() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getAdmin_id() {

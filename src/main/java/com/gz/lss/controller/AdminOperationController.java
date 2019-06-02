@@ -19,7 +19,6 @@ import com.gz.lss.pojo.Tb_review;
 import com.gz.lss.pojo.Tb_worker;
 import com.gz.lss.service.AdminOperationService;
 import com.gz.lss.service.WorkerService;
-import com.gz.lss.util.tag.PageModel;
 
 @Controller
 @RequestMapping("/adminOperation")
@@ -42,23 +41,6 @@ public class AdminOperationController {
 		}else {
 			return ResultGenerator.genSuccessResultMsg(map);
 		}
-	}
-
-	
-	/**
-	 * 根据状态获取用户身份请求
-	 * @param state	状态(12 审核中, 13 通过, 14 未通过)
-	 * @return
-	 */
-	@RequestMapping("/getAllIdentityRequest")
-	@ResponseBody
-	public String getAllIdentityRequest(Integer state, Integer pageIndex) {
-		PageModel pageModel = new PageModel();
-		if(pageIndex != null){
-			pageModel.setPageIndex(pageIndex);
-		}
-		List<Tb_review> requests = adminOperationService.getAllIdentityRequest(state, pageModel);
-		return JSON.toJSONString(requests);
 	}
 
 	/**

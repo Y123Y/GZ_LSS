@@ -7,7 +7,6 @@ import com.gz.lss.entity.WorkerExamine;
 import com.gz.lss.pojo.Tb_admin;
 import com.gz.lss.pojo.Tb_review;
 import com.gz.lss.pojo.Tb_worker;
-import com.gz.lss.util.tag.PageModel;
 
 public interface AdminOperationService {
 
@@ -29,15 +28,6 @@ public interface AdminOperationService {
 	 */
 	List<WorkerExamine> getExamineOfNeed();
 
-	/**
-	 * 根据状态获取用户身份请求
-	 * @param state	状态(12 审核中, 13 通过, 14 未通过)
-	 * @param pageModel 分页
-	 * @return
-	 * @throws Exception 
-	 */
-	List<Tb_review> getAllIdentityRequest(Integer state, PageModel pageModel);
-	
 	/**
 	 * 通过用户身份请求
 	 * @param review_id 请求ID
