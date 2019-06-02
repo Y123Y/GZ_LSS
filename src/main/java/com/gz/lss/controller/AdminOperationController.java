@@ -10,6 +10,7 @@ import com.gz.lss.entity.WorkerExamine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -103,40 +104,21 @@ public class AdminOperationController {
 			return ResultGenerator.genFailResultMsg("重置失败");
 		}
 	}
-	
+
 	/**
-	 * 通过用户身份请求
-	 * @param review_id 请求ID
+	 * 处理身份审核
+	 * @param review_id
+	 * @param suggestion
 	 * @return
 	 */
-	@RequestMapping("/pass")
+	@RequestMapping("/handleExamine")
 	@ResponseBody
-	public String passRequest(Integer review_id) {
-		Map<String, Object> result = new HashMap<>();
-		if(adminOperationService.passIdentityRequest(review_id)) {
-			result.put("message", "处理完成");
-		}else {
-			result.put("message", "处理失败");
+	public ResultMsg handleExamine(@RequestParam("review_id") Integer review_id, @RequestParam("suggestion") Boolean suggestion) {
+		if(adminOperationService.handleExamine(review_id, suggestion)){
+			return ResultGenerator.genSuccessResultMsg();
+		}else{
+			return ResultGenerator.genFailResultMsg("处理失败");
 		}
-		
-		return JSON.toJSONString(result);
 	}
-	
-	/**
-	 * 驳回用户身份请求
-	 * @param review_id 请求ID
-	 * @return
-	 */
-	@RequestMapping("/reject")
-	@ResponseBody
-	public String rejectRequest(Integer review_id) {
-		Map<String, Object> result = new HashMap<>();
-		if(adminOperationService.rejectIdentityRequest(review_id)) {
-			result.put("message", "处理完成");
-		}else {
-			result.put("message", "处理失败");
-		}
-		
-		return JSON.toJSONString(result);
-	}
+
 }

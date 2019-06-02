@@ -81,5 +81,14 @@ public interface ReviewDao {
 	 */
 	@Delete("delete from "+ LssConstants.TBREVIEW + " where worker_id = #{worker_id}")
 	public int deleteByWorkerId(Integer worker_id) throws Exception;
+
+	/**
+	 * 根据id查询一条记录
+	 * @param review_id
+	 * @return
+	 * @throws Exception
+	 */
+	@Select("select * from" + LssConstants.TBREVIEW + " where review_id = #{review_id}")
+	public Tb_review selectById(Integer review_id) throws Exception;
 	
 }

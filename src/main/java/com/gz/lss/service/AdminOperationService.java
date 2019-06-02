@@ -29,20 +29,12 @@ public interface AdminOperationService {
 	List<WorkerExamine> getExamineOfNeed();
 
 	/**
-	 * 通过用户身份请求
-	 * @param review_id 请求ID
+	 * 处理身份审核
+	 * @param review_id
+	 * @param suggestion
 	 * @return
-	 * @throws Exception 
 	 */
-	Boolean passIdentityRequest(Integer review_id);
-	
-	/**
-	 * 驳回用户身份请求
-	 * @param review_id 请求ID
-	 * @return
-	 * @throws Exception 
-	 */
-	Boolean rejectIdentityRequest(Integer review_id);
+	Boolean handleExamine(Integer review_id, Boolean suggestion);
 	
 	/**
 	 * 获取所有工作人员信息

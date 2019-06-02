@@ -6,6 +6,7 @@ import com.gz.lss.dao.CTSDao;
 import com.gz.lss.entity.WorkerExamine;
 import com.gz.lss.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.transform.impl.AccessFieldTransformer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,32 +94,35 @@ public class AdminOperationServiceImpl implements AdminOperationService {
 		return list;
 	}
 
+	/**
+	 * 处理身份审核
+	 *
+	 * @param review_id
+	 * @param suggestion
+	 * @return
+	 */
 	@Override
-	public Boolean passIdentityRequest(Integer review_id){
-		try {
-			reviewDao.passReview(review_id);
-			Integer want=reviewDao.selectWantState(review_id);
-			if(want!=null&&want!=0) {
-				workerDao.updateIndentity(review_id,want);
-				return true;
+	public Boolean handleExamine(Integer review_id, Boolean suggestion) {
+		Boolean res;
+		try{
+			if (suggestion){
+				reviewDao.passReview(review_id);
+				Tb_review review = reviewDao.selectById(review_id);
+				if (review.getWant() != null && review.getWant() != 0){
+					workerDao.updateIndentity(review.getWorker_id(), review.getWant());
+					res = true;
+				}else {
+					res = false;
+				}
 			}else {
-				return false;
+				reviewDao.rejectReview(review_id);
+				res = true;
 			}
-		}catch(Exception e) {
+		}catch (Exception e){
 			e.printStackTrace();
-			return false;
+			res = false;
 		}
-	}
-
-	@Override
-	public Boolean rejectIdentityRequest(Integer review_id){
-		try {
-			reviewDao.rejectReview(review_id);
-		}catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		return res;
 	}
 
 	@Override
