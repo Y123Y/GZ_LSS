@@ -105,7 +105,7 @@ public interface WorkerDao {
 	 * @return
 	 */
 	@Delete("delete from "+LssConstants.TBWORKER+" where worker_id=#{id}")
-	public Boolean delete(Integer id) throws Exception;
+	public int delete(Integer id) throws Exception;
 
 	/**
 	 * 

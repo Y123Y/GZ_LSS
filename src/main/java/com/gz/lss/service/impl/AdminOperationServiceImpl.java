@@ -139,13 +139,17 @@ public class AdminOperationServiceImpl implements AdminOperationService {
 
 	@Override
 	public Boolean deleteWorker(Integer worker_id) {
-		Boolean b=false;
+		Boolean b;
 		try {
-			b=workerDao.delete(worker_id);
-
+			if(workerDao.delete(worker_id) <= 0 ){
+				b = false;
+			}else{
+				reviewDao.deleteByWorkerId(worker_id);
+				b = true;
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			b=false;
+			b = false;
 		}
 		return b;
 	}
