@@ -2,13 +2,12 @@ package com.gz.lss.controller;
 
 import javax.servlet.http.HttpSession;
 
+import com.gz.lss.common.ResultGenerator;
+import com.gz.lss.common.ResultMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
@@ -28,13 +27,12 @@ public class AdminController {
 	 * @param password	密码
 	 * @return
 	 */
-	@RequestMapping("/login")
+	@PostMapping("/login")
 	public ModelAndView login(@RequestParam("account") String loginname,
 			 @RequestParam("password") String password,
 			 HttpSession session, ModelAndView mv) {
 		// 调用业务逻辑组件判断用户是否可以登录
 		Tb_admin currentadmin = adminService.adminLogin(loginname, password);
-
 		if(currentadmin != null) {
 			// 将用户信息保存到HttpSession当中
 			Tb_admin admin = new Tb_admin();
@@ -42,6 +40,7 @@ public class AdminController {
 			admin.setAccount(currentadmin.getAccount());
 			session.setAttribute(LssConstants.ADMIN_SESSION, admin);
 			mv.setViewName(LssConstants.ADMINMAIN);
+			mv.addObject("name", currentadmin.getName());
 		}else {
 			//登录失败
 			mv.addObject("message", "登录失败，用户名或密码错误");
@@ -55,7 +54,7 @@ public class AdminController {
 	 * 跳转到管理员登录页
 	 * @return
 	 */
-	@RequestMapping("/loginForm")
+	@GetMapping("/login")
 	public String adminLoginForm() {
 		return LssConstants.ADMINLOGIN;
 	}
@@ -64,9 +63,8 @@ public class AdminController {
 	 * 跳转到管理员主页
 	 * @return
 	 */
-	@RequestMapping("/mainManage")
+	@RequestMapping("/main")
 	public String adminMain() {
-
 		System.out.println("test main page");
 		return LssConstants.ADMINMAIN;
 
@@ -101,43 +99,40 @@ public class AdminController {
 		
 		return JSON.toJSONString(admin);
 	}
-	
+
 	/**
 	 * 更新管理员信息
-	 * @param admin
+	 * @param name
+	 * @param oldPassword
+	 * @param newPassword
+	 * @param session
 	 * @return
 	 */
 	@RequestMapping("/updateAdminInfo")
 	@ResponseBody
-	public String updateAdminInfo(@ModelAttribute Tb_admin admin, HttpSession session) {
-		if(adminService.updateAdmin(admin)) {
-			Tb_admin a = new Tb_admin();
-			a.setAdmin_id(admin.getAdmin_id());
-			a.setAccount(admin.getAccount());
-			session.setAttribute(LssConstants.ADMIN_SESSION, a);
-			return "用户信息更新成功";
-		}else {
-			return "用户信息更新失败";
-		}
-	}
-	
-	/**
-	 * 修改管理员密码
-	 * @param oldPassword	旧密码
-	 * @param newPassword	新密码
-	 * @return
-	 */
-	@RequestMapping("/changePasswd")
-	public String changePasswd(@RequestParam("oldPasswd") String oldPassword, @RequestParam("newPasswd") String newPassword, HttpSession session, Model model) {
+	public ResultMsg updateAdminInfo(@RequestParam("name") String name,
+									 @RequestParam("oldPassword") String oldPassword,
+									 @RequestParam("newPassword") String newPassword,
+									 HttpSession session) {
+		System.out.println("test update info");
 		Tb_admin currentAdmin = (Tb_admin) session.getAttribute(LssConstants.ADMIN_SESSION);
-		
-		if(adminService.updatePasswd(currentAdmin.getAccount(), oldPassword, newPassword)) {
-			model.addAttribute("message", "密码修改成功");
-		}else {
-			model.addAttribute("message", "密码修改失败");			
+		if (currentAdmin.getAdmin_id() == null){
+			return ResultGenerator.genFailResultMsg("登录的id或账号为空");
 		}
-		
-		return LssConstants.ADMINMAIN;
+		boolean res = true;
+		if((! "".equals(name.trim()))){
+			res &= adminService.upadteAdminName(currentAdmin.getAdmin_id(), name);
+		}
+		if((! "".equals(oldPassword.trim())) && (! "".equals(newPassword.trim()))){
+			res &= adminService.updatePasswd(currentAdmin.getAdmin_id(), oldPassword, newPassword);
+		}
+		currentAdmin = adminService.selectAdminById(currentAdmin.getAdmin_id());
+		session.setAttribute(LssConstants.ADMIN_SESSION, currentAdmin);
+		if (res){
+			return ResultGenerator.genSuccessResultMsg();
+		}else {
+			return ResultGenerator.genFailResultMsg("修改失败");
+		}
 	}
 
 	/**
@@ -148,7 +143,6 @@ public class AdminController {
 	@RequestMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute(LssConstants.ADMIN_SESSION);
-		
-		return "redirect:/"+LssConstants.ADMINLOGIN;
+		return LssConstants.ADMINLOGIN;
 	}
 }

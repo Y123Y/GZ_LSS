@@ -1,5 +1,6 @@
 package com.gz.lss.dao;
 
+import com.gz.lss.entity.WorkerExamine;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -10,8 +11,19 @@ import org.springframework.stereotype.Repository;
 import com.gz.lss.common.LssConstants;
 import com.gz.lss.pojo.Tb_admin;
 
+import java.util.List;
+
 @Repository("AdminDao")
 public interface AdminDao {
+
+	/**
+	 * 修改管理员姓名
+	 * @param admin_id
+	 * @param name
+	 * @return
+	 */
+	@Update("update "+ LssConstants.TBADMIN + " set name = #{name} where admin_id = #{admin_id}")
+	public int updateAdminName(Integer admin_id, String name) throws Exception;
 
 	/**
 	 * 
@@ -20,15 +32,16 @@ public interface AdminDao {
 	 */
 	@Select("select * from "+LssConstants.TBADMIN+" where account=#{userName} ")
 	public Tb_admin selectByUserName(String userName);
-	
+
 	/**
 	 * 修改用户密码
 	 * @param admin_id
-	 * @param passwd
+	 * @param oldPassword
+	 * @param newPassword
 	 * @return
 	 */
-	@Update("update "+LssConstants.TBADMIN+" set passwd = #{passwd} where account = #{account}")
-	public int updatePwd(@Param("account") String account, @Param("passwd") String passwd);
+	@Update("update "+LssConstants.TBADMIN + " set passwd = #{newPassword} where admin_id = #{admin_id} and passwd = #{oldPassword}")
+	public int updatePwd(@Param("admin_id") Integer admin_id, @Param("oldPassword") String oldPassword, @Param("newPassword") String newPassword) throws Exception;
 
 	/**
 	 * 

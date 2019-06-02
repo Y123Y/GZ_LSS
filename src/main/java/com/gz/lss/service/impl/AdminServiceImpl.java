@@ -30,20 +30,30 @@ public class AdminServiceImpl implements AdminService {
 		return admin;
 	}
 
+	/**
+	 * 修改管理员id
+	 * @param admin_id
+	 * @param oldPasswd	旧密码
+	 * @param newPasswd	新密码
+	 * @return
+	 */
 	@Override
-	public Boolean updatePasswd(String account,String oldPasswd, String newPasswd){
+	public Boolean updatePasswd(Integer admin_id,String oldPasswd, String newPasswd){
+		Boolean res;
 		try {
-			Tb_admin admin=dao.selectByUserName(account);
-			if(admin!=null&&admin.getPasswd().equals(oldPasswd)) {
-				dao.updatePwd(account, newPasswd);
-				return true;
+			if(dao.updatePwd(admin_id, oldPasswd, newPasswd) <= 0){
+				res = false;
+			}else{
+				res = true;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			return false;
+			res = false;
 		}
-		return false;
+		return res;
 	}
+
+
 
 	@Override
 	public Tb_admin selectAdminById(Integer admin_id) {
@@ -69,16 +79,23 @@ public class AdminServiceImpl implements AdminService {
 		return admin;
 	}
 
+	/**
+	 * 修改管理员姓名
+	 *
+	 * @param admin_id
+	 * @param name
+	 * @return
+	 */
 	@Override
-	public Boolean updateAdmin(Tb_admin admin) {
-		Boolean b=false;
-		try {
-			b=dao.update(admin);
-		}catch(Exception e) {
+	public Boolean upadteAdminName(Integer admin_id, String name) {
+		Boolean res;
+		try{
+			dao.updateAdminName(admin_id, name);
+			res = true;
+		}catch (Exception e){
 			e.printStackTrace();
-			b=false;
+			res = false;
 		}
-		return b;
+		return res;
 	}
-
 }

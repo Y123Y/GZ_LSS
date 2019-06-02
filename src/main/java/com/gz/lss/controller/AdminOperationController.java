@@ -6,9 +6,11 @@ import java.util.Map;
 
 import com.gz.lss.common.ResultGenerator;
 import com.gz.lss.common.ResultMsg;
+import com.gz.lss.entity.WorkerExamine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -18,7 +20,6 @@ import com.gz.lss.pojo.Tb_review;
 import com.gz.lss.pojo.Tb_worker;
 import com.gz.lss.service.AdminOperationService;
 import com.gz.lss.service.WorkerService;
-import com.gz.lss.util.tag.PageModel;
 
 @Controller
 @RequestMapping("/adminOperation")
@@ -27,22 +28,38 @@ public class AdminOperationController {
 	private AdminOperationService adminOperationService;
 	@Autowired
 	private WorkerService workerService;
-	
+
 	/**
-	 * 根据状态获取用户身份请求
-	 * @param state	状态(12 审核中, 13 通过, 14 未通过)
+	 * 获取状态标识和身份标识所对应的对象信息
 	 * @return
 	 */
-	@RequestMapping("/getAllIdentityRequest")
+	@RequestMapping("/getStringAndCode")
 	@ResponseBody
-	public String getAllIdentityRequest(Integer state, Integer pageIndex) {
-		PageModel pageModel = new PageModel();
-		if(pageIndex != null){
-			pageModel.setPageIndex(pageIndex);
+	public ResultMsg getStringAndCode() {
+		Map<String, Object> map = adminOperationService.getStringAndCode();
+		if(map == null || map.isEmpty()){
+			return ResultGenerator.genFailResultMsg("数据为空");
+		}else {
+			return ResultGenerator.genSuccessResultMsg(map);
 		}
-		List<Tb_review> requests = adminOperationService.getAllIdentityRequest(state, pageModel);
-		return JSON.toJSONString(requests);
 	}
+
+	/**
+	 * 根据状态获取用户身份请求
+	 * @return
+	 */
+	@RequestMapping("/getExamieOfNeed")
+	@ResponseBody
+	public ResultMsg getExamieOfNeed() {
+		List<WorkerExamine> requests = adminOperationService.getExamineOfNeed();
+		if (requests == null || requests.isEmpty())
+			return ResultGenerator.genFailResultMsg("数据为空");
+		else{
+			return ResultGenerator.genSuccessResultMsg(requests);
+		}
+	}
+
+
 	
 	/**
 	 * 获取所有工作人员
@@ -54,47 +71,8 @@ public class AdminOperationController {
 		List<Tb_worker> workers = adminOperationService.selectWorker();
 		return ResultGenerator.genSuccessResultMsg(workers);
 	}
-	
-	/**
-	 * 增加工作人员
-	 * @param worker 工作人员信息
-	 * @return
-	 */
-	@RequestMapping("/addWorker")
-	@ResponseBody
-	public String addWorker(Tb_worker worker) {
-		Map<String, Object> result = new HashMap<>();
-		
-		if(workerService.selectWorkerByLoginName(worker.getLogin_name()) != null) {
-			result.put("type", "0");
-			return JSON.toJSONString(result);
-		}
-		
-		Integer worker_id = workerService.addWorker(worker);
-		Tb_worker w = workerService.selectWorkerById(worker_id);
-		if(worker_id != null) {
-			result.put("type", "1");
-			result.put("worker", w);
-		}else {
-			result.put("type", "0");
-		}
-		return JSON.toJSONString(result);
-	}
-	
-	/**
-	 * 修改工作人员信息
-	 * @param worker 工作人员信息
-	 * @return
-	 */
-	@RequestMapping("/modifyWorker")
-	@ResponseBody
-	public String modifyWorker(Tb_worker worker) {
-		if(worker != null && workerService.updateWorker(worker)) {
-			return "true";
-		}else {
-			return "false";
-		}
-	}
+
+
 	
 	/**
 	 * 删除工作人员
@@ -103,77 +81,44 @@ public class AdminOperationController {
 	 */
 	@RequestMapping("/deleteWorker")
 	@ResponseBody
-	public String deleteWorker(Integer worker_id) {
+	public ResultMsg deleteWorker(Integer worker_id) {
 		if(worker_id != null && adminOperationService.deleteWorker(worker_id)) {
-			return "true";
+			return ResultGenerator.genSuccessResultMsg();
 		}else {
-			return "false";
+			return ResultGenerator.genFailResultMsg("删除失败");
 		}
 	}
-	
+
+
 	/**
-	 * 通过用户身份请求
-	 * @param review_id 请求ID
+	 * 重置工作人员密码
+	 * @param worker_id
 	 * @return
 	 */
-	@RequestMapping("/pass")
+	@RequestMapping("/resetWorker")
 	@ResponseBody
-	public String passRequest(Integer review_id) {
-		Map<String, Object> result = new HashMap<>();
-		if(adminOperationService.passIdentityRequest(review_id)) {
-			result.put("message", "处理完成");
+	public ResultMsg resetWorker(Integer worker_id) {
+		if(adminOperationService.ressetPasswordOfWorker(worker_id)){
+			return ResultGenerator.genSuccessResultMsg();
 		}else {
-			result.put("message", "处理失败");
+			return ResultGenerator.genFailResultMsg("重置失败");
 		}
-		
-		return JSON.toJSONString(result);
 	}
-	
+
 	/**
-	 * 驳回用户身份请求
-	 * @param review_id 请求ID
+	 * 处理身份审核
+	 * @param review_id
+	 * @param suggestion
 	 * @return
 	 */
-	@RequestMapping("/reject")
+	@RequestMapping("/handleExamine")
 	@ResponseBody
-	public String rejectRequest(Integer review_id) {
-		Map<String, Object> result = new HashMap<>();
-		if(adminOperationService.rejectIdentityRequest(review_id)) {
-			result.put("message", "处理完成");
-		}else {
-			result.put("message", "处理失败");
-		}
-		
-		return JSON.toJSONString(result);
-	}
-	
-	/**
-	 * 添加管理员
-	 * @param admin 管理员信息
-	 * @return
-	 */
-	@RequestMapping("/addAdmin")
-	@ResponseBody
-	public String addAdmin(Tb_admin admin) {
-		if(admin != null && adminOperationService.addAdmin(admin)) {
-			return "true";
-		}else {
-			return "false";
+	public ResultMsg handleExamine(@RequestParam("review_id") Integer review_id, @RequestParam("suggestion") Boolean suggestion) {
+		if(adminOperationService.handleExamine(review_id, suggestion)){
+			return ResultGenerator.genSuccessResultMsg();
+		}else{
+			return ResultGenerator.genFailResultMsg("处理失败");
 		}
 	}
-	
-	/**
-	 * 删除管理员
-	 * @param admin_id 管理员ID
-	 * @return
-	 */
-	@RequestMapping("/deleteAdmin")
-	@ResponseBody
-	public String deleteAdmin(Integer admin_id) {
-		if(admin_id != null && adminOperationService.deleteAdmin(admin_id)) {
-			return "true";
-		}else {
-			return "false";
-		}
-	}
+
 }
