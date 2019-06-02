@@ -2,6 +2,7 @@ package com.gz.lss.dao;
 
 import java.util.List;
 
+import com.gz.lss.pojo.Tb_state;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -72,9 +73,9 @@ public interface WorkerDao {
 	 * @return
 	 */
 	@Insert("insert into "+LssConstants.TBWORKER
-			+" (login_name,passwd,name,identity,tel) values("
-			+ "#{login_name},#{passwd},#{name},#{identity},#{tel})")
-	public Boolean insert(Tb_worker worker) throws Exception;
+			+" (login_name,passwd,secret_key) values("
+			+ "#{login_name},#{passwd},#{secret_key})")
+	Boolean insert(Tb_worker worker) throws Exception;
 
 	/**
 	 * 
@@ -112,5 +113,13 @@ public interface WorkerDao {
 	 */
 	@Select("select last_insert_id() ")
 	public Integer selectId() throws Exception;
-	
+
+	/* ================================================================================= */
+
+	/**
+	 * 查找所有状态信息
+	 * @return
+	 */
+	@Select("select * from "+LssConstants.TBSTATE)
+	public List<Tb_state> selectStates() throws Exception;
 }

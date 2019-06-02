@@ -24,7 +24,7 @@ public interface WorkerService {
 	
 	/**
 	 * 判断用户是否存在
-	 * @param worker_id	工作人员ID
+	 * @param loginname	用户名
 	 * @return	存在返回用户信息, 不存在返回NULL
 	 */
 	Tb_worker selectWorkerByLoginName(String loginname);
@@ -49,7 +49,7 @@ public interface WorkerService {
 	 * @param newPasswd	新密码
 	 * @return
 	 */
-	Boolean updatePasswd(Integer worker_id, String oldPasswd, String newPasswd);
+	Boolean updatePasswd(String worker_name, String oldPasswd, String newPasswd);
 
 	/**
 	 * 更改身份请求

@@ -3,6 +3,7 @@ package com.gz.lss.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.gz.lss.entity.OrderInfo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -81,8 +82,19 @@ public interface OrderDao {
 	@Update("update tb_order set state = #{state} where order_id = #{order_id}")
 	public Boolean updateState(@Param("order_id") Integer order_id, @Param("state") Integer state);
 	
-	
-	
+
+	/*======================================== worker =============================================*/
+
+	@Select("select order_id,login_name,create_time,content,"+LssConstants.TBADDRESS+".name," +LssConstants.TBADDRESS+".tel,remarks,state " +
+			"from "+LssConstants.TBORDER+","+LssConstants.TBUSER+","+LssConstants.TBADDRESS+
+			" where "+LssConstants.TBORDER+".user_id="+LssConstants.TBUSER+".user_id and "+LssConstants.TBORDER+".address_id="+LssConstants.TBADDRESS+".address_id")
+	List<OrderInfo> selectAllOrder();
+
+	@Select("select * from " + LssConstants.TBORDER + " where order_id=#{order_id}")
+	Tb_order selectOrderById(Integer order_id);
+
+	/*============================================================================================*/
+
 	
 	/**********************************************************************************/
 	/*

@@ -1,5 +1,7 @@
 package com.gz.lss.common;
 
+import java.io.*;
+
 public class LssConstants {
 	
 	// 数据库表常量
@@ -40,7 +42,26 @@ public class LssConstants {
 	
 	// 默认每页20条数据
 	public static int PAGE_DEFAULT_SIZE = 20;
-	
-	
-	
+
+	//单位秒，默认3天
+	public static Long DEFAULT_TOKEN_TTL = 60L * 60L * 24L * 3L;
+	public static final String COOKIE_TOKEN_KEY = "worker_token";
+	public static final String TOKEN_PAYLOAD_KEY = "worker_name";
+
+	public static String SECRET_KEY;
+	public static String SECRET_KEY_PATH = "secret.key";
+	static {
+		String path = LssConstants.class.getClassLoader().getResource(SECRET_KEY_PATH).getFile();
+		File file = new File(path);
+		StringBuilder sb = new StringBuilder();
+		try(FileReader fis = new FileReader(file); BufferedReader br = new BufferedReader(fis)) {
+			String str;
+			while ((str = br.readLine()) != null) {
+				sb.append(str);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		SECRET_KEY = sb.toString();
+	}
 }

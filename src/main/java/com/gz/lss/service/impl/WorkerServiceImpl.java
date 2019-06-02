@@ -2,6 +2,8 @@ package com.gz.lss.service.impl;
 
 import java.util.List;
 
+import com.gz.lss.util.security.PasswordHelper;
+import com.gz.lss.util.security.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ public class WorkerServiceImpl implements WorkerService {
 		Tb_worker worker=null;
 		try {
 			worker=dao.selectByLogin(loginname);
-			if(worker==null||!worker.getPasswd().equals(password)) {
+			if(worker==null||!worker.getPasswd().equals(PasswordHelper.getPasswordDigest(password, worker.getSecret_key()))) {
 				worker=null;
 			}
 		}catch(Exception e) {
@@ -64,10 +66,10 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public Integer addWorker(Tb_worker worker) {
-		Integer id = null;
+		Integer id;
 		try {
 			 dao.insert(worker);
-			 id=dao.selectId();
+			 id = dao.selectId();
 		}catch(Exception e) {
 			e.printStackTrace();
 			id = null;
@@ -92,13 +94,13 @@ public class WorkerServiceImpl implements WorkerService {
 	}
 
 	@Override
-	public Boolean updatePasswd(Integer worker_id,String oldPasswd, String newPasswd) {
+	public Boolean updatePasswd(String worker_name,String oldPasswd, String newPasswd) {
 		try {
-			Tb_worker worker=dao.selectById(worker_id);
-			if(worker==null||!worker.getPasswd().equals(oldPasswd)) {
+			Tb_worker worker=dao.selectByLogin(worker_name);
+			if(worker==null||!worker.getPasswd().equals(PasswordHelper.getPasswordDigest(oldPasswd, worker.getSecret_key()))) {
 				return false;
 			}else {
-				dao.updatePwd(worker_id, newPasswd);
+				dao.updatePwd(worker.getWorker_id(), PasswordHelper.getPasswordDigest(newPasswd, worker.getSecret_key()));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -151,12 +153,12 @@ public class WorkerServiceImpl implements WorkerService {
 	 */
 	@Override
 	public Tb_review selectReviewById(Integer worker_id) {
-		Tb_review review=null;
+		Tb_review review;
 		try {
-			review=reviewDao.selectByWorker(worker_id);
+			review = reviewDao.selectByWorker(worker_id);
 		}catch(Exception e) {
 			e.printStackTrace();
-			review=null;
+			review = null;
 		}
 		return review;
 	}

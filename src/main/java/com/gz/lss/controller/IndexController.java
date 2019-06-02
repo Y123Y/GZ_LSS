@@ -17,4 +17,10 @@ public class IndexController implements ErrorController {
     public String getErrorPath() {
         return ERROR_PATH;
     }
+
+    @RequestMapping("/worker")
+    public String index() {
+        return "icework/index";
+    }
+
 }

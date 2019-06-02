@@ -1,5 +1,6 @@
 package com.gz.lss.configure;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private AuthorizedInterceptor authorizedInterceptor;
+    @Autowired
+    private TokenInterceptor tokenInterceptor;
 
     /**
      * 拦截器
@@ -25,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authorizedInterceptor);
+        registry.addInterceptor(tokenInterceptor).addPathPatterns("/worker/*", "/workerOperation/*").excludePathPatterns("/worker/login", "/worker/register", "/worker/checkWorkerId");
     }
 
     /**

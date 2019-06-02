@@ -1,284 +1,217 @@
 package com.gz.lss.controller;
 
+import com.gz.lss.common.LssConstants;
+import com.gz.lss.common.ResultGenerator;
+import com.gz.lss.common.ResultMsg;
+import com.gz.lss.pojo.Tb_review;
+import com.gz.lss.pojo.Tb_w_identity;
+import com.gz.lss.pojo.Tb_worker;
+import com.gz.lss.service.WorkerService;
+import com.gz.lss.util.security.PasswordHelper;
+import com.gz.lss.util.security.TokenUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSON;
-import com.gz.lss.common.LssConstants;
-import com.gz.lss.pojo.Tb_review;
-import com.gz.lss.pojo.Tb_state;
-import com.gz.lss.pojo.Tb_w_identity;
-import com.gz.lss.pojo.Tb_worker;
-import com.gz.lss.service.WorkerOperationService;
-import com.gz.lss.service.WorkerService;
-
-@Controller
+@Slf4j
+@RestController
 @RequestMapping("/worker")
 public class WorkerController {
 	@Autowired
 	private WorkerService workerService;
-	@Autowired
-	private WorkerOperationService workerOperationService;
-	
+
 	/**
 	 * 处理登录请求
-	 * @param loginname	登录名
+	 * @param username	登录名
 	 * @param password	密码
-	 * @return
 	 */
 	@RequestMapping("/login")
-	public ModelAndView login(@RequestParam("loginname") String loginname,
-			 @RequestParam("password") String password,
-			 HttpSession session, ModelAndView mv) {
+	public ResultMsg login(@RequestParam("username") String username,
+						   @RequestParam("password") String password,
+						   HttpServletResponse response) {
 		// 调用业务逻辑组件判断用户是否可以登录
-		Tb_worker worker = workerService.workerLogin(loginname, password);
+		Tb_worker worker = workerService.workerLogin(username, password);
 
+		ResultMsg result;
 		if(worker != null) {
-			Tb_worker w = new Tb_worker();
-			w.setWorker_id(worker.getWorker_id());
-			w.setLogin_name(worker.getLogin_name());
-			// 将用户ID保存到HttpSession当中
-			session.setAttribute(LssConstants.WORKER_SESSION, w);
-			mv.setViewName("redirect:/"+LssConstants.WORKERMAIN);
+			try {
+				//生成token，并以用户名为键，将token放入redis中
+				String token = TokenUtil.updateToken(worker);
+				log.info(token);
+				//将token放入cookie返回客户端
+				TokenUtil.addCookie(response, token);
+				result = ResultGenerator.genSuccessResultMsg();
+			}catch (Exception e){
+				log.error("生成Token出错");
+				e.printStackTrace();
+				result = ResultGenerator.genFailResultMsg("登陆失败");
+			}
 		}else {
-			//登录失败
-			mv.addObject("message", "登录失败，用户名或密码错误");
-			mv.setViewName("forward:/"+LssConstants.WORKERLOGIN);
+			result = ResultGenerator.genFailResultMsg("用户名或密码错误");
 		}
-		
-		return mv;
-	}
-	
-	/**
-	 * 跳转到工作人员登录页
-	 * @return
-	 */
-	@RequestMapping("/loginForm")
-	public String workerLoginForm() {
-		return LssConstants.WORKERLOGIN;
-	}
-	
-	/**
-	 * 跳转到工作人员主页
-	 * @return
-	 */
-	@RequestMapping("/main")
-	public String workerMain(HttpSession session, Model model) {
-		Tb_worker w = (Tb_worker) session.getAttribute(LssConstants.WORKER_SESSION);
-		Tb_worker worker = workerService.selectWorkerById(w.getWorker_id());
-		
-		List<Tb_w_identity> identities = workerService.getIdentities();
-		List<Tb_state> states = workerOperationService.selectStatesByIdentity(worker.getIdentity());
 
-		model.addAttribute("states", states);
-		model.addAttribute("identities", identities);
-		model.addAttribute("worker", worker);
-		return LssConstants.WORKERMAIN;
+		return result;
 	}
-	
+
+	@RequestMapping("/loginByToken")
+	public ResultMsg loginByToken(){
+		return ResultGenerator.genSuccessResultMsg();
+	}
+
 	/**
 	 * 验证用户名是否合法
 	 * @param login_name	用户名
-	 * @return
 	 */
 	@RequestMapping("/checkWorkerId")
 	@ResponseBody
-	public String checkWorkerId(String login_name) {
+	public ResultMsg checkWorkerId(@RequestParam("username") String login_name) {
 		if(workerService.selectWorkerByLoginName(login_name) != null) {
-			return "用户名已存在";
+			return ResultGenerator.genFailResultMsg("用户名已存在");
 		}else {
-			return "true";
+			return ResultGenerator.genSuccessResultMsg();
 		}
 	}
-	
-	/**
-	 * 返回注册页面
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("/registerForm")
-	public String registerForm(Model model) {
-		List<Tb_w_identity> list = workerService.getIdentities();
-		model.addAttribute("tb_worker", new Tb_worker());
-		model.addAttribute("identities", list);
-		return LssConstants.WORKERREGISTER;
-	}
-	
+
 	/**
 	 * 用户注册
 	 * @param worker	用户信息
-	 * @param model	
-	 * @return
 	 */
 	@RequestMapping("/register")
-	public String register(@Valid @ModelAttribute Tb_worker worker, Errors error, Model model) {
+	public ResultMsg register(@ModelAttribute Tb_worker worker) {
 		if(workerService.selectWorkerByLoginName(worker.getLogin_name()) != null) {
-			model.addAttribute("message", "注册失败，用户名已存在");
-			return "forward:/"+LssConstants.WORKERREGISTER;
+			return ResultGenerator.genFailResultMsg("注册失败，用户名已存在");
 		}
-		
-		if(error.hasErrors()) {
-			List<Tb_w_identity> list = workerService.getIdentities();
-			model.addAttribute("identities", list);
-			return LssConstants.WORKERREGISTER;
-		}
-		
-		Integer wantIdentity = worker.getIdentity();
-		worker.setIdentity(8);
+
+		String password = worker.getPasswd();
+		//对密码进行散列并将密码散列值和secret_key存储在数据库中
+		String secret_key = PasswordHelper.getSecretKey(16);
+		password = PasswordHelper.getPasswordDigest(password, secret_key);
+		worker.setPasswd(password);
+		worker.setSecret_key(secret_key);
+
 		Integer worker_id = workerService.addWorker(worker);
 		
 		if(worker_id == null) {
-			model.addAttribute("message", "注册失败");
-			List<Tb_w_identity> list = workerService.getIdentities();
-			model.addAttribute("identities", list);
-			return "forward:/"+LssConstants.WORKERREGISTER;
+			return ResultGenerator.genFailResultMsg("注册失败");
 		}
 
-		//身份请求
-		workerService.changeIdentity(worker_id, worker.getIdentity(), wantIdentity, null);
-		worker.setIdentity(8);
-		
-		model.addAttribute("message", "注册成功");
-		return "forward:/"+LssConstants.WORKERLOGIN;
+		return ResultGenerator.genSuccessResultMsg();
 	}
 	
 	/**
 	 * 返回用户信息
-	 * @param model
-	 * @return
 	 */
 	@RequestMapping("/workerInfo")
-	@ResponseBody
-	public String userInfo(HttpSession session) {
-		Tb_worker w = (Tb_worker) session.getAttribute(LssConstants.WORKER_SESSION);
-		
-		Tb_worker worker = workerService.selectWorkerById(w.getWorker_id());
-		
-		worker.setPasswd(null);
-		
-		return JSON.toJSONString(worker);
+	public ResultMsg userInfo(HttpServletRequest request) {
+		String worker_name = (String) request.getAttribute(LssConstants.TOKEN_PAYLOAD_KEY);
+
+		Tb_worker worker = workerService.selectWorkerByLoginName(worker_name);
+		if (worker != null) {
+			worker.setPasswd(null);
+			worker.setSecret_key(null);
+
+			return ResultGenerator.genSuccessResultMsg(worker);
+		} else {
+			return ResultGenerator.genFailResultMsg("获取信息失败");
+		}
 	}
 	
 	/**
 	 * 更新用户信息
-	 * @param worker
-	 * @return
+	 * @param worker 用户信息
 	 */
 	@RequestMapping("/updateWorkerInfo")
-	@ResponseBody
-	public String updateUserInfo(@ModelAttribute Tb_worker worker, HttpSession session) {
-		Map<String, Object> result = new HashMap<>();
-		Tb_worker currentWorker = (Tb_worker) session.getAttribute(LssConstants.WORKER_SESSION);
-		worker.setWorker_id(currentWorker.getWorker_id());
-		System.out.println(worker);
+	public ResultMsg updateUserInfo(@ModelAttribute Tb_worker worker, HttpServletRequest request, HttpServletResponse response) {
+		ResultMsg result;
+		Integer worker_id = Integer.parseInt((String) request.getAttribute("worker_id"));
+
+		worker.setWorker_id(worker_id);
+		log.info(worker.toString());
 		if(workerService.updateWorker(worker)) {
-			Tb_worker w = new Tb_worker();
-			w.setWorker_id(worker.getWorker_id());
-			w.setLogin_name(worker.getLogin_name());
-			session.setAttribute(LssConstants.WORKER_SESSION, w);
-			result.put("message", "用户信息更新成功");
+			try {
+				String updateToken = TokenUtil.updateToken(worker.getLogin_name());
+				TokenUtil.addCookie(response, updateToken);
+				result = ResultGenerator.genSuccessResultMsg();
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = ResultGenerator.genFailResultMsg("用户信息更新出错");
+			}
 		}else {
-			result.put("message", "用户信息更新失败");
+			result = ResultGenerator.genFailResultMsg("用户信息更新失败");
 		}
 		
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 	/**
 	 * 修改用户密码
 	 * @param oldPassword	旧密码
 	 * @param newPassword	新密码
-	 * @return
 	 */
 	@RequestMapping("/changePasswd")
-	@ResponseBody
-	public String changePasswd(@RequestParam("oldPasswd") String oldPassword, @RequestParam("newPasswd") String newPassword, HttpSession session) {
-		Map<String, Object> result = new HashMap<>();
-		Tb_worker w = (Tb_worker) session.getAttribute(LssConstants.WORKER_SESSION);
-		
-		if(workerService.updatePasswd(w.getWorker_id(), oldPassword, newPassword)) {
-			result.put("message", "密码修改成功");
+	public ResultMsg changePasswd(@RequestParam("oldPasswd") String oldPassword, @RequestParam("newPasswd") String newPassword, HttpServletRequest request) {
+		ResultMsg result;
+		String worker_name = (String) request.getAttribute(LssConstants.TOKEN_PAYLOAD_KEY);
+
+		if(workerService.updatePasswd(worker_name, oldPassword, newPassword)) {
+			result = ResultGenerator.genSuccessResultMsg();
 		}else {
-			result.put("message", "密码修改失败");			
+			result = ResultGenerator.genFailResultMsg("密码修改失败, 请稍后重试");
 		}
 		
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 	/**
-	 *返回工作人员所有身份(除未审核人员)
-	 * @return
+	 *返回工作人员所有身份
 	 */
 	@RequestMapping("/getIdentities")
-	@ResponseBody
-	public String getIdentities() {
+	public ResultMsg getIdentities() {
 		List<Tb_w_identity> list = workerService.getIdentities();
-		return JSON.toJSONString(list);
-	}
-	
-	/**
-	 * 检查是否有未完成身份请求
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping("/checkUnfinished")
-	@ResponseBody
-	public String checkUnfinishedIdentityRequest(HttpSession session) {
-		Tb_worker w = (Tb_worker) session.getAttribute(LssConstants.WORKER_SESSION);
-		Tb_review review = workerService.selectReviewById(w.getWorker_id());
-		if(review != null) {
-			return "true";
-		}
-		return "false";
+		Map<Integer, String> map = new HashMap<>();
+		list.forEach((w) -> map.put(w.getIdentity(), w.getName()));
+		return ResultGenerator.genSuccessResultMsg(map);
 	}
 	
 	/**
 	 * 更改身份请求
 	 * @param identity	想要的身份
-	 * @param descript	说明
-	 * @param session
-	 * @return
+	 * @param description	说明
 	 */
 	@RequestMapping("/changeIdentity")
-	@ResponseBody
-	public String changeIdentity(Integer identity, String descript, HttpSession session) {
-		Map<String, Object> result = new HashMap<>();
-		Tb_worker w = (Tb_worker) session.getAttribute(LssConstants.WORKER_SESSION);
-		
-		Tb_worker worker = workerService.selectWorkerById(w.getWorker_id());
-		
-		if(workerService.changeIdentity(w.getWorker_id(), worker.getIdentity(), identity, descript)) {
-			result.put("message", "请求提交成功");
+	public ResultMsg changeIdentity(@RequestParam("identity") Integer identity, @RequestParam("description") String description, HttpServletRequest request) {
+		ResultMsg result;
+		String worker_name = (String) request.getAttribute(LssConstants.TOKEN_PAYLOAD_KEY);
+		Tb_worker worker = workerService.selectWorkerByLoginName(worker_name);
+
+        Tb_review review = workerService.selectReviewById(worker.getWorker_id());
+        if(review != null) {
+            return ResultGenerator.genFailResultMsg("已有处理中的一个身份请求，请不要重复提交");
+        }
+
+		if(workerService.changeIdentity(worker.getWorker_id(), worker.getIdentity(), identity, description)) {
+			result = ResultGenerator.genSuccessResultMsg();
 		}else {
-			result.put("message", "请求提交失败");			
+			result = ResultGenerator.genFailResultMsg("请求提交失败");
 		}
-			
-		return JSON.toJSONString(result);
+
+		return result;
 	}
 
 	/**
 	 * 退出登录
-	 * @param session
+	 * @param worker_name
 	 * @return
 	 */
 	@RequestMapping("/logout")
-	public String logout(HttpSession session) {
-		session.removeAttribute(LssConstants.WORKER_SESSION);
-		
-		return "redirect:/"+LssConstants.WORKERLOGIN;
+	public ResultMsg logout(String worker_name) {
+		TokenUtil.deleteToken(worker_name);
+		return ResultGenerator.genSuccessResultMsg();
 	}
 }

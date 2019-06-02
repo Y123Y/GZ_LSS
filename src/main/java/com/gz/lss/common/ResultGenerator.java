@@ -5,7 +5,7 @@ package com.gz.lss.common;
  */
 public class ResultGenerator {
     private static final String DEFAULT_SUCCESS_MESSAGE = "SUCCESS";
-    private static final String UNAUTHORIZED_MESSAGE = "您当前尚未登录或者登录已经过期，请重新登录";
+    private static final String UNAUTHORIZED_MESSAGE = "您尚未登录或者登录已经过期，请重新登录";
     public static ResultMsg genSuccessResultMsg() {
         return new ResultMsg()
                 .setCode(ResultCode.SUCCESS).setMessage(DEFAULT_SUCCESS_MESSAGE);
