@@ -1,126 +1,140 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>后台管理</title>
-		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
-		<script th:src="@{/js/bootstrap.min.js}"></script>
-		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-		<script th:src="@{/js/vue.min.js}"></script>
-		<script th:src="@{/js/admin_main.js}"></script>
-		<link rel="stylesheet" th:href="@{/css/admin.css}" />
-	</head>
-	<body>
-		<div id="app">
-			<div id="left-div">
-				<header>
-					LSS-Admin
-				</header>
-				<ul>
-					<li v-for="(item, index) of left_lists" :key="index" @click="left_click(index)">{{item}}</li>
-				</ul>
-			</div>
-			<div id="right-div">
-				<ul>
-					<li id="info_name" th:text="${name}"></li>
-					<div id="right-div-ul-tip">
-						<div data-toggle="modal" data-target="#update_info_modal">
-							修改信息
-						</div>
-						<div @click="logout_click">
-							退出登录
-						</div>
-					</div>
-					<li></li>
-				</ul>
-				<section>
-					<div v-show="show_workers" id="display_workers">
-						<h3 class="small_head">{{left_lists[0]}}</h3>
-						<table class="table table-hover">
-							<thead>
-								<tr class="table-active">
-									<th v-for="(item, index) of worker_cols" :key="index">{{item}}</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(item, index) of workers" :key="index">
-									<td>{{item.worker_id}}</td>
-									<td>{{item.name}}</td>
-									<td>{{item.identity}}</td>
-									<td>{{item.tel}}</td>
-									<td>{{item.login_name}}</td>
-									<td>
-										<button type="button" class="btn btn-info" @click="update_worker_btn(item.worker_id)">删除</button>
-										<button type="button" class="btn btn-info" @click="update2_worker_btn(item.worker_id)">重置密码</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>后台管理</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <script th:src="@{/js/vue.min.js}"></script>
+    <script th:src="@{/js/admin_main.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div id="app">
+    <div id="left-div">
+        <header>
+            LSS-Admin
+        </header>
+        <ul>
+            <li v-for="(item, index) of left_lists" :key="index" @click="left_click(index)">{{item}}</li>
+        </ul>
+    </div>
+    <div id="right-div">
+        <ul>
+            <li id="info_name" th:text="${name}"></li>
+            <div id="right-div-ul-tip">
+                <div data-toggle="modal" data-target="#update_info_modal">
+                    修改信息
+                </div>
+                <div @click="logout_click">
+                    退出登录
+                </div>
+            </div>
+            <li></li>
+        </ul>
+        <section>
+            <div v-show="show_workers" id="display_workers">
+                <h3 class="small_head">{{left_lists[0]}}</h3>
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="table-active">
+                        <th v-for="(item, index) of worker_cols" :key="index">{{item}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item, index) of workers" :key="index">
+                        <td>{{item.worker_id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.identity}}</td>
+                        <td>{{item.tel}}</td>
+                        <td>{{item.login_name}}</td>
+                        <td>
+                            <button type="button" class="btn btn-info" @click="update_worker_btn(item.worker_id)">删除
+                            </button>
+                            <button type="button" class="btn btn-info" @click="update2_worker_btn(item.worker_id)">
+                                重置密码
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div v-show="show_workers_tip" class="show_tip">工作人员信息为空！</div>
+            </div>
 
-					<div v-show="show_examine" id="display_examine">
-						<h3 class="small_head">{{left_lists[1]}}</h3>
-						<table class="table table-hover">
-							<thead>
-								<tr class="table-active">
-									<th v-for="(item, index) of examine_cols" :key="index">{{item}}</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(item, index) of examines" :key="index">
-									<td>{{item.review_id}}</td>
-									<td>{{item.worker_name}}</td>
-									<td>{{item.current}}</td>
-									<td>{{item.want}}</td>
-									<td>{{item.description}}</td>
-									<td>{{item.state}}</td>
-									<td>
-										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, true, true)">通过</button>
-										<button type="button" class="btn btn-info" @click="update_examine_btn(item.review_id, false, true)">驳回</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</section>
+            <div v-show="show_examine" id="display_examine">
+                <h3 class="small_head">{{left_lists[1]}}</h3>
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="table-active">
+                        <th v-for="(item, index) of examine_cols" :key="index">{{item}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item, index) of examines" :key="index">
+                        <td>{{item.review_id}}</td>
+                        <td>{{item.worker_name}}</td>
+                        <td>{{item.current}}</td>
+                        <td>{{item.want}}</td>
+                        <td>{{item.description}}</td>
+                        <td>{{item.state}}</td>
+                        <td>
+                            <button type="button" class="btn btn-info"
+                                    @click="update_examine_btn(item.review_id, true, true)">通过
+                            </button>
+                            <button type="button" class="btn btn-info"
+                                    @click="update_examine_btn(item.review_id, false, true)">驳回
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div v-show="show_examines_tip" class="show_tip">审核记录为空！</div>
+            </div>
+        </section>
 
-				<!-- 模态框（Modal） -->
-				<div class="modal fade" id="update_info_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-				 aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 class="modal-title" id="myModalLabel">修改个人信息</h4>
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-							</div>
-							<div class="modal-body">
-								<div class="input-group col-8  my-modal-col">
-									<span class="my-modal-span">&nbsp;&nbsp;&nbsp;姓名&nbsp;&nbsp;&nbsp;</span>
-									<input v-model="admin_info.name" type="text" class="form-control" aria-label="...">
-								</div>
-								<div class="input-group col-9 my-modal-col">
-									<span class="my-modal-span">旧的密码</span>
-									<input v-model="admin_info.oldPassword" type="password" class="form-control" aria-label="...">
-								</div>
-								<div class="input-group col-9 my-modal-col">
-									<span class="my-modal-span">新的密码</span>
-									<input v-model="admin_info.newPassword" type="password" class="form-control" aria-label="...">
-								</div>
-								<div class="input-group col-9  my-modal-col">
-									<span class="my-modal-span">确认密码</span>
-									<input v-model="admin_info.sure_password" type="password" class="form-control" aria-label="...">
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-								<button type="button" class="btn btn-primary" data-dismiss="modal" @click="update_admin_info(true)">提交更改</button>
-							</div>
-						</div><!-- /.modal-content -->
-					</div><!-- /.modal-dialog -->
-				</div>
-				<!-- /.modal -->
-			</div>
-		</div>
-	</body>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="update_info_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">修改个人信息</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group col-8  my-modal-col">
+                            <span class="my-modal-span">&nbsp;&nbsp;&nbsp;姓名&nbsp;&nbsp;&nbsp;</span>
+                            <input v-model="admin_info.name" type="text" class="form-control" aria-label="...">
+                        </div>
+                        <div class="input-group col-9 my-modal-col">
+                            <span class="my-modal-span">旧的密码</span>
+                            <input v-model="admin_info.oldPassword" type="password" class="form-control"
+                                   aria-label="...">
+                        </div>
+                        <div class="input-group col-9 my-modal-col">
+                            <span class="my-modal-span">新的密码</span>
+                            <input v-model="admin_info.newPassword" type="password" class="form-control"
+                                   aria-label="...">
+                        </div>
+                        <div class="input-group col-9  my-modal-col">
+                            <span class="my-modal-span">确认密码</span>
+                            <input v-model="admin_info.sure_password" type="password" class="form-control"
+                                   aria-label="...">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                @click="update_admin_info(true)">提交更改
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</div>
+</body>
 </html>

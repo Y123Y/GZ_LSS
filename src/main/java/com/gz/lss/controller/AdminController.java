@@ -15,6 +15,9 @@ import com.gz.lss.common.LssConstants;
 import com.gz.lss.pojo.Tb_admin;
 import com.gz.lss.service.AdminService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -43,10 +46,9 @@ public class AdminController {
 			mv.addObject("name", currentadmin.getName());
 		}else {
 			//登录失败
-			mv.addObject("message", "登录失败，用户名或密码错误");
+			mv.addObject("msg", "用户名或密码错误！");
 			mv.setViewName(LssConstants.ADMINLOGIN);
 		}
-		
 		return mv;
 	}
 	
@@ -67,37 +69,6 @@ public class AdminController {
 	public String adminMain() {
 		System.out.println("test main page");
 		return LssConstants.ADMINMAIN;
-
-	}
-	
-	/**
-	 * 验证用户名是否合法
-	 * @param account	用户名
-	 * @return 用户名存在返回false
-	 */
-	@RequestMapping("/checkAdminAccount")
-	@ResponseBody
-	public String checkWorkerId(String account) {
-		if(adminService.selectAdminByAccount(account) != null) {
-			return "false";
-		}else {
-			return "true";
-		}
-	}
-	
-	/**
-	 * 返回管理员信息
-	 * @return
-	 */
-	@RequestMapping("/adminInfo")
-	@ResponseBody
-	public String userInfo(HttpSession session) {
-		Tb_admin currentAdmin = (Tb_admin) session.getAttribute(LssConstants.ADMIN_SESSION);
-		
-		Tb_admin admin = adminService.selectAdminById(currentAdmin.getAdmin_id());
-		admin.setPasswd(null);
-		
-		return JSON.toJSONString(admin);
 	}
 
 	/**
@@ -114,25 +85,32 @@ public class AdminController {
 									 @RequestParam("oldPassword") String oldPassword,
 									 @RequestParam("newPassword") String newPassword,
 									 HttpSession session) {
-		System.out.println("test update info");
 		Tb_admin currentAdmin = (Tb_admin) session.getAttribute(LssConstants.ADMIN_SESSION);
 		if (currentAdmin.getAdmin_id() == null){
-			return ResultGenerator.genFailResultMsg("登录的id或账号为空");
+			return ResultGenerator.genUnAuthorityResultMsg();
 		}
-		boolean res = true;
+		Map<String, String> res = new HashMap<>();
 		if((! "".equals(name.trim()))){
-			res &= adminService.upadteAdminName(currentAdmin.getAdmin_id(), name);
+			if (adminService.upadteAdminName(currentAdmin.getAdmin_id(), name)){
+				res.put("update_name", "true");
+				res.put("update_name_msg", "用户名修改成功");
+			}else{
+				res.put("update_name", "false");
+				res.put("update_name_msg", "用户名修改失败");
+			}
 		}
 		if((! "".equals(oldPassword.trim())) && (! "".equals(newPassword.trim()))){
-			res &= adminService.updatePasswd(currentAdmin.getAdmin_id(), oldPassword, newPassword);
+			if (adminService.updatePasswd(currentAdmin.getAdmin_id(), oldPassword, newPassword)){
+				res.put("update_pwd", "true");
+				res.put("update_pwd_msg", "密码修改成功");
+			}else {
+				res.put("update_pwd", "false");
+				res.put("update_pwd_msg", "密码修改失败");
+			}
 		}
 		currentAdmin = adminService.selectAdminById(currentAdmin.getAdmin_id());
 		session.setAttribute(LssConstants.ADMIN_SESSION, currentAdmin);
-		if (res){
-			return ResultGenerator.genSuccessResultMsg();
-		}else {
-			return ResultGenerator.genFailResultMsg("修改失败");
-		}
+		return ResultGenerator.genSuccessResultMsg(res);
 	}
 
 	/**

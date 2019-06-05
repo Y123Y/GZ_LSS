@@ -50,7 +50,7 @@ public interface AdminDao {
 	 */
 	@Insert("insert into "+LssConstants.TBADMIN+" (account,passwd,name) "
 			+ "values(#{account},#{passwd},#{name}) ")
-	public Boolean insert(Tb_admin admin);
+	public int insert(Tb_admin admin);
 
 	/**
 	 * 
@@ -58,7 +58,7 @@ public interface AdminDao {
 	 * @return
 	 */
 	@Delete("delete from "+LssConstants.TBADMIN+" where admin_id=#{admin_id}")
-	public Boolean delete(Integer admin_id);
+	public int delete(Integer admin_id);
 
 	/**
 	 * 
@@ -84,7 +84,7 @@ public interface AdminDao {
 	@Update("update "+LssConstants.TBADMIN+" set "
 			+ "account=#{account},"
 			+ "name=#{name} where admin_id=#{admin_id}")
-	public Boolean update(Tb_admin admin);
+	public int update(Tb_admin admin);
 	
 	
 }

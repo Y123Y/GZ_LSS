@@ -152,3 +152,10 @@
 	padding: 20px;
 	text-align: center;
 }
+
+.show_tip{
+	text-align: center;
+	font-size: 14px;
+	font-family: '微软雅黑';
+	margin: 5px;
+}
