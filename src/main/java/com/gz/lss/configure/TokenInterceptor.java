@@ -39,7 +39,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             }
         }
         if (token != null) {
-            log.info(token);
+            //log.info(token);
             try {
                 Map<String, Claim> claimMap = TokenUtil.verifyToken(token);
                 String token_key = claimMap.get(LssConstants.TOKEN_PAYLOAD_KEY).asString();

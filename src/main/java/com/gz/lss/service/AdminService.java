@@ -25,13 +25,6 @@ public interface AdminService {
 	 * @return	
 	 */
 	Tb_admin selectAdminById(Integer admin_id);
-	
-	/**
-	 * 判断管理员是否存在
-	 * @param account	管理员登录名
-	 * @return	存在返回管理员信息, 不存在返回NULL
-	 */
-	Tb_admin selectAdminByAccount(String account);
 
 	/**
 	 * 修改管理员姓名
