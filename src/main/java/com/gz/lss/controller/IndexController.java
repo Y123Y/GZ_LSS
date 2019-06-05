@@ -20,7 +20,7 @@ public class IndexController implements ErrorController {
 
     @RequestMapping("/worker")
     public String index() {
-        return "icework/index";
+        return "worker/index";
     }
 
 }

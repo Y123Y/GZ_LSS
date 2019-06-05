@@ -68,7 +68,7 @@ public class AdminOperationServiceImpl implements AdminOperationService {
         try {
             Tb_worker w = workerDao.selectById(worker_id);
             String pwd = PasswordHelper.getPasswordDigest("abc123", w.getSecret_key());
-            res = workerDao.updatePwd(worker_id, pwd);
+            res = workerDao.updatePwd(worker_id, pwd) > 0;
         } catch (Exception e) {
             e.printStackTrace();
             res = false;
@@ -118,8 +118,7 @@ public class AdminOperationServiceImpl implements AdminOperationService {
                 reviewDao.passReview(review_id);
                 Tb_review review = reviewDao.selectById(review_id);
                 if (review.getWant() != null && review.getWant() != 0) {
-                    workerDao.updateIndentity(review.getWorker_id(), review.getWant());
-                    res = true;
+                    res = workerDao.updateIndentity(review.getWorker_id(), review.getWant()) > 0;
                 } else {
                     res = false;
                 }

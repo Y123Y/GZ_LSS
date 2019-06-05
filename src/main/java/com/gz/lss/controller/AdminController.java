@@ -42,7 +42,7 @@ public class AdminController {
 			admin.setAdmin_id(currentadmin.getAdmin_id());
 			admin.setAccount(currentadmin.getAccount());
 			session.setAttribute(LssConstants.ADMIN_SESSION, admin);
-			mv.setViewName(LssConstants.ADMINMAIN);
+			mv.setViewName("redirect:main");
 			mv.addObject("name", currentadmin.getName());
 		}else {
 			//登录失败

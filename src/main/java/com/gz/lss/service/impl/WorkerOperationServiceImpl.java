@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.gz.lss.dao.OrderDao;
 import com.gz.lss.dao.WorkerDao;
-import com.gz.lss.pojo.Tb_order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import com.gz.lss.pojo.Tb_books;
 import com.gz.lss.pojo.Tb_state;
 import com.gz.lss.service.WorkerOperationService;
 import com.gz.lss.util.tag.PageModel;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Service
 @Transactional
@@ -32,21 +32,20 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 
 	@Override
 	public List<Tb_books> selectBooksByState(Integer state, PageModel pageModel) {
-		List<Tb_books> list=null;
+		List<Tb_books> list = null;
 		try {
-			Integer count=booksDao.countByState(state);
-			if(count>0) {
+			Integer count = booksDao.countByState(state);
+			if (count > 0) {
 				pageModel.setRecordCount(count);
-				Map<String,Object> map=new HashMap<>();
+				Map<String, Object> map = new HashMap<>();
 				map.put("state", state);
 				map.put("pageModel", pageModel);
-				list=booksDao.selectsByStateWithPage(map);
-			}else {
-				list=booksDao.selectsByState(state);
+				list = booksDao.selectsByStateWithPage(map);
+			} else {
+				list = booksDao.selectsByState(state);
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			list=null;
 		}
 		return list;
 	}
@@ -59,7 +58,6 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 			book = booksDao.selectBookById(books_id);
 		}catch(Exception e) {
 			e.printStackTrace();
-			book = null;
 		}
 		
 		return book;
@@ -92,6 +90,19 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 		return list;
 	}
 
+	/**
+	 * 该身份能否修改该状态
+	 *
+	 * @param identity 身份
+	 * @param state    状态
+	 * @return
+	 */
+	@Override
+	public Boolean checkStateIdentity(Integer identity, Integer state) {
+		Set<Integer> set = getStatesByIdentity(identity);
+		return set.contains(state);
+	}
+
 	@Override
 	public Boolean changBookState(Integer detail_id, Integer state_id) {
 		try {
@@ -99,18 +110,30 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 			if (!book.getState().equals(state_id)) {
 				booksDao.updateState(detail_id, state_id);
 			}
+
 			if (state_id == 6 || state_id == 7) {
 				orderDao.updateState(book.getOrder_id(), 2);
-			} else if (state_id == 8) {
-				orderDao.updateState(book.getOrder_id(), 3);
-			} else if (state_id == 9) {
-				Tb_order order = orderDao.selectOrderById(book.getOrder_id());
-				if (!order.getState().equals(3)) {
-					orderDao.updateState(order.getOrder_id(), 4);
+			} else if (state_id == 8 || state_id == 9) {
+				Integer[] states = new Integer[]{0, 0};
+				List<Tb_books> books = booksDao.selectsByOrder(book.getOrder_id());
+				for (Tb_books b : books) {
+					if (b.getState() == 8) {
+						states[0]++;	//登记成功
+					} else if (b.getState() == 9) {
+						states[1]++;	//登记失败
+					}
+				}
+				if (states[0] + states[1] == books.size()) {
+					if (states[0] > 0) {
+						orderDao.updateState(book.getOrder_id(), 3);
+					} else if (states[0] == 0) {
+						orderDao.updateState(book.getOrder_id(), 4);
+					}
 				}
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
 		}
 		return true;
@@ -135,6 +158,14 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 	@Override
 	public List<Tb_books> selectBooksByIdentity(Integer identity) {
 		List<Tb_books> books = new ArrayList<>();
+		Set<Integer> set = getStatesByIdentity(identity);
+		for (Integer state : set) {
+			books.addAll(booksDao.selectsByState(state));
+		}
+		return books;
+	}
+
+	private Set<Integer> getStatesByIdentity(Integer identity) {
 		List<Integer[]> sets = new ArrayList<>();
 		sets.add(new Integer[]{5, 6, 7});
 		sets.add(new Integer[]{7, 8, 9});
@@ -148,10 +179,7 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 			identity = identity >> 1;
 			index++;
 		}
-		for (Integer state : set) {
-			books.addAll(booksDao.selectsByState(state));
-		}
-		return books;
+		return set;
 	}
 
 	@Override

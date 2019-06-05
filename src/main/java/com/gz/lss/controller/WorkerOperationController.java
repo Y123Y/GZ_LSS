@@ -66,17 +66,22 @@ public class WorkerOperationController {
 		List<Tb_books> dataList = workerOperationService.selectBooksByIdentity(identity);
 		return ResultGenerator.genSuccessResultMsg(dataList);
 	}
-	
+
 	/**
 	 * 更改订单详情图书状态
+	 *
 	 * @param books_id 图书ID
 	 * @param state_id 状态ID
 	 */
 	@RequestMapping("/changBookState")
-	public ResultMsg changBookState(@RequestParam("stateId") Integer state_id, @RequestParam("booksId") Integer... books_id) {
+	public ResultMsg changBookState(HttpServletRequest request, @RequestParam("stateId") Integer state_id, @RequestParam("booksId") Integer... books_id) {
+		int identity = Integer.parseInt((String) request.getAttribute("authority"));
+		if (!workerOperationService.checkStateIdentity(identity, state_id)) {
+			return ResultGenerator.genFailResultMsg("您没有此操作权限");
+		}
 		for (int i = 0; i < books_id.length; i++) {
 			Integer bookId = books_id[i];
-			if(!workerOperationService.changBookState(bookId, state_id)) {
+			if (!workerOperationService.changBookState(bookId, state_id)) {
 				if (i == 0) {
 					return ResultGenerator.genFailResultMsg("状态更新失败");
 				}
