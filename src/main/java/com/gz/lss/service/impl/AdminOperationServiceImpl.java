@@ -6,8 +6,6 @@ import com.gz.lss.dao.CTSDao;
 import com.gz.lss.entity.WorkerExamine;
 import com.gz.lss.pojo.*;
 import com.gz.lss.util.security.PasswordHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.transform.impl.AccessFieldTransformer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
