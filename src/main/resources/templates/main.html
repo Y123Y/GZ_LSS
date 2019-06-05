@@ -14,10 +14,10 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap-3.3.7/css/bootstrap.css}"/>
 </head>
 <body>
-    <div th:if="${session.userSession}" th:object="${session.userSession}" >
-        <div th:text="*{username}"></div>
+    <div th:if="${session.user_session}" th:object="${session.user_session}" >
+        <div th:text="*{login_name}"></div>
         <div><b>[[*{username}]]</b></div>
-        <div th:with="text='欢迎,<em>' + *{username} + '</em>'">
+        <div th:with="text='欢迎,<em>' + *{login_name} + '</em>'">
             <div>[[${text}]]</div>
             <div>[(${text})]</div>
         </div>

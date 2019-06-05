@@ -43,12 +43,12 @@ public class WorkerController {
 			try {
 				//生成token，并以用户名为键，将token放入redis中
 				String token = TokenUtil.updateToken(worker);
-				log.info(token);
+				//log.info(token);
 				//将token放入cookie返回客户端
 				TokenUtil.addCookie(response, token);
 				result = ResultGenerator.genSuccessResultMsg();
 			}catch (Exception e){
-				log.error("生成Token出错");
+				//log.error("生成Token出错");
 				e.printStackTrace();
 				result = ResultGenerator.genFailResultMsg("登陆失败");
 			}
@@ -132,7 +132,7 @@ public class WorkerController {
 		Integer worker_id = Integer.parseInt((String) request.getAttribute("worker_id"));
 
 		worker.setWorker_id(worker_id);
-		log.info(worker.toString());
+		//log.info(worker.toString());
 		if(workerService.updateWorker(worker)) {
 			try {
 				String updateToken = TokenUtil.updateToken(worker.getLogin_name());

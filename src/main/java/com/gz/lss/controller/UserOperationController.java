@@ -1,19 +1,5 @@
 package com.gz.lss.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.gz.lss.common.LssConstants;
 import com.gz.lss.entity.BookInfo;
@@ -24,6 +10,19 @@ import com.gz.lss.service.AddressService;
 import com.gz.lss.service.UserOperationService;
 import com.gz.lss.service.UserService;
 import com.gz.lss.util.tag.PageModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/userOperation")
@@ -42,6 +41,7 @@ public class UserOperationController {
 	@RequestMapping(value="/selectBooks")
 	@ResponseBody
 	public String selectBooks(@RequestParam("keyword") String keyword, Integer pageIndex) {
+		System.out.println(keyword);
 		Map<String, Object> data = userOperationService.selectBooks(keyword, pageIndex);
 		if(data.get("list") != null) {
 			data.put("pageIndex", pageIndex);
@@ -107,6 +107,8 @@ public class UserOperationController {
 		List<Tb_cart> cart = userOperationService.selectCartByUser(currentUser.getUser_id(), pageModel);
 		model.addAttribute("cart", cart);
 		model.addAttribute("pageModel", pageModel);
+		List<Tb_address> addresses = addressService.getAddresses(currentUser.getUser_id());
+		model.addAttribute("addresses", addresses);
 		return LssConstants.BOOKCART;
 	}
 	

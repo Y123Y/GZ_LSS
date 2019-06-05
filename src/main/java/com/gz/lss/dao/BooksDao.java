@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.gz.lss.common.LssConstants;
+import com.gz.lss.pojo.Tb_books;
+import com.gz.lss.pojo.Tb_state;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -11,11 +14,6 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
-import com.gz.lss.common.LssConstants;
-import com.gz.lss.pojo.Tb_admin;
-import com.gz.lss.pojo.Tb_books;
-import com.gz.lss.pojo.Tb_order;
-import com.gz.lss.pojo.Tb_state;
 
 /**
  * 订单的数据库操作
@@ -30,7 +28,7 @@ public interface BooksDao {
 	 * @param order_id
 	 * @return
 	 */
-	@Select("select * from "+LssConstants.TBBOOKS  +" where order_id = #{order_id}")
+	@Select("select * from "+ LssConstants.TBBOOKS  +" where order_id = #{order_id}")
 	public List<Tb_books> selectsByOrder(Integer order_id) throws Exception;
 	
 	/**

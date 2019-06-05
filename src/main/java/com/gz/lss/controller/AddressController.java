@@ -6,16 +6,17 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.alibaba.fastjson.JSON;
 import com.gz.lss.common.LssConstants;
 import com.gz.lss.pojo.Tb_address;
 import com.gz.lss.pojo.Tb_user;
 import com.gz.lss.service.AddressService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
 
 @Controller
 @RequestMapping("/address")
@@ -30,7 +31,7 @@ public class AddressController {
 	 */
 	@RequestMapping("/getAddresses")
 	@ResponseBody
-	public String getAddresses(HttpSession session) {
+	public String getAddresses(HttpSession session, Model model) {
 		Tb_user currentUser = (Tb_user) session.getAttribute(LssConstants.USER_SESSION);
 
 		List<Tb_address> addresses = addressService.getAddresses(currentUser.getUser_id());
@@ -101,7 +102,7 @@ public class AddressController {
 	@ResponseBody
 	public String updateAddress(Tb_address address) {
 		Map<String, Object> result = new HashMap<>();
-		
+		System.out.println(address.toString());
 		if(addressService.updateAddress(address)) {
 			result.put("message", "更新地址成功");
 		}else {

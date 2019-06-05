@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+
+    <script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
+
+    <link th:href="@{/css/maintop.css}" rel="stylesheet">
+    <link th:href="@{/css/footer.css}" rel="stylesheet">
+    <link th:href="@{/css/tableset.css}" rel="stylesheet">
+    <link th:href="@{/css/sweetalert.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sweetalert.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/maintop.js}"></script>
+    <script type="text/javascript" th:src="@{/js/global.js}"></script>
+    <title>历史借阅界面</title>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("tr.parent").click(function () {
+                $(this).siblings(".child_" + this.id).toggle();
+            });
+
+            $(".btn_showdetail").click(function (e) {
+                e.stopPropagation();
+                var parent = $(this).parent().parent();
+                var order_id = $(this).parent().parent().children("#orderid").html();
+                var row_id = $(this).parent().parent().attr("id");
+
+                $.ajax({
+                    url: getRealPath() + "/order/showOrderDetail",
+                    dataType: "json",
+                    data: {
+                        "order_id": order_id
+                    },
+                    type: "POST",
+                    success: function (data) {
+                        $.each(data, function (i, data) {
+                            $(parent).after("<tr class='child_" + row_id + "'>" +
+                                "<td>" + data.book_name + "</td>" +
+                                "<td>" + data.book_author + "</td>" +
+                                "<td>" + data.book_index + " </td>" +
+                                "<td>" + data.book_press + "</td>" +
+                                "<td colspan='2'>数量:" + data.number + "</td>" +
+                                "</tr>");
+                        });
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        swal("未知错误!", "提示:" + XMLHttpRequest.readyState + "***" + XMLHttpRequest.status + "***" + XMLHttpRequest.responseText, "error");
+                    }
+                });
+
+                $(this).attr("disabled", true);
+            });
+
+            $(".btn_delete").click(function (e) {
+                var order_Id = $(this).parent().parent().children("#orderid").html();
+                //防止子元素的事件被父元素执行
+                e.stopPropagation();
+
+                swal({
+                    title: "提示",
+                    text: "您确定要删除该记录么？",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "是的，我要删除",
+                    confirmButtonColor: "#ec6c62"
+                }, function () {
+                    //删除历史订单信息
+                    window.location = "../order/deleteOrder?order_id=" + order_Id;
+                });
+            });
+        });
+
+    </script>
+
+    <style type="text/css">
+        .parent {
+            background: #999 !important;
+
+        }
+
+        .parent > td {
+            color: #fff !important;
+        }
+
+        .parent:HOVER {
+            background: #888 !important;
+        }
+
+        tr[class^='child_'] {
+            /* display: none; */
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div id="header">
+        <div class="top" id="top">
+            <li>
+                <div class="dropdown">
+                    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+                        我的地址
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li class="dropdown-header">
+                            <span style="font-weight: bold; font-size: 13px;">已有地址</span>
+                        </li>
+
+                        <li class="dropdown-header" th:if="${addresses}" th:each="address:${addresses}">
+                            <a th:id="${address.address_id }" class="update_address"
+                               th:text="${address.content}">
+                            </a>
+                        </li>
+
+                        <li role="presentation" class="dropdown-header" th:unless="${addresses}">
+                            <a href="#">没有地址信息</a>
+                        </li>
+
+
+                        <li class="dropdown-header">
+                            <span style="font-weight: bold; font-size: 13px;">操作</span>
+                        </li>
+
+                        <li role="presentation">
+                            <a class="pop_addressDiv">添加新地址</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <div id="topright">
+
+                <li th:if="${session.user_session.login_name}">
+                    <a href="#">欢迎您,<span th:text="${session.user_session.login_name}"></span></a>
+                </li>
+
+                <li th:unless="${session.user_session.login_name}">
+                    <a th:href="@{/user/loginForm}">你好！请登录</a>
+                </li>
+                <li th:unless="${session.user_session.login_name}">
+                    <a th:href="@{/user/registerForm}">免费注册</a>
+                </li>
+                <li>|
+                    <a th:href="@{/order/history}">我的订单</a>
+                </li>
+                <li>|
+                    <a href="">网站导航<i class="arrow"> </i></a>
+                    <ul>
+                        <li><a th:href="@{/user/userInfo}">个人中心</a></li>
+                    </ul>
+                </li>
+
+            </div>
+        </div>
+    </div>
+
+    <!--  订单历史和管理表单-->
+    <div class="l-width">
+        <div class="l-width table_title" style="height: 50px;">
+            <h2>订单历史管理</h2>
+        </div>
+        <table id="tb" class="table table-striped table-bordered table-hover  table-condensed booklist">
+            <thead>
+            <tr>
+                <th>创建时间</th>
+                <th>完成时间</th>
+                <th>派送时间</th>
+                <th>备注</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <div th:each="order:${orders}" varStatus="stat">
+
+                <tr class="parent" id="row_${stat.index}">
+                    <td style="display: none" id="orderid" th:text=" ${order.order_id}">
+                    </td>
+                    <td>
+                        <span th:text=" ${order.create_time}"></span>
+                    </td>
+                    <td>
+                        <span th:text=" ${order.finish_time}"></span>
+                    </td>
+                    <td>
+                        <span th:text=" ${order.deliver_time}"></span>
+                    </td>
+                    <td>
+                        <span th:text=" ${order.remarks}"></span>
+                    </td>
+                    <td>
+                        <span  th:if="${order.state == 1}" th:text = "待处理"></span>
+                        <span  th:if="${order.state == 2}" th:text = "已受理"></span>
+                        <span  th:if="${order.state == 3}" th:text = "借书成功"></span>
+                        <span  th:if="${order.state == 4}" th:text = "借书失败"></span>
+                        <span  th:if="${order.state == 5}" th:text = "待处理"></span>
+                        <span  th:if="${order.state == 6}" th:text = "未找到"></span>
+                        <span  th:if="${order.state == 7}" th:text = "已找到"></span>
+                        <span  th:if="${order.state == 8}" th:text = "登记成功"></span>
+                        <span  th:if="${order.state == 9}" th:text = "登记失败"></span>
+                        <span  th:if="${order.state == 10}" th:text = "派送成功"></span>
+                        <span  th:if="${order.state == 11}" th:text = "派送失败"></span>
+                        <span  th:if="${order.state == 12}" th:text = "审核中"></span>
+                        <span  th:if="${order.state == 13}" th:text = "通过"></span>
+                        <span  th:if="${order.state == 14}" th:text = "未通过"></span>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm btn_delete">删除</button>
+                        <button class="btn btn-info btn-sm btn_showdetail">详情</button>
+                    </td>
+                </tr>
+
+            </div>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="footer">
+        <div class="l-width">
+            <div class="content">
+                <p>Copyright©2017
+                    <a href="http://www.ctgu.edu.cn/" target="_blank">三峡大学</a>
+                    图书馆版权所有　　地址：宜昌市大学路8号　　邮编：443002　　馆长信箱：lib@ctgu.edu.cn　　电话：0717-6392083　　</p>
+            </div>
+        </div>
+    </div>
+    <div id="right_item">
+        <ul>
+            <li><a th:href="@{/user/main}"><img th:src="@{/images/home.png}"/></a>
+                <div class="toggle_title">返回首页</div>
+            </li>
+            <li><a th:href="@{/user/userInfo}"><img th:src="@{/images/geren.png}"/></a>
+                <div class="toggle_title">个人信息</div>
+            </li>
+            <li><a th:href="@{/userOperation/bookCart}"><img th:src="@{/images/shopcart.png}"/></a>
+                <div class="toggle_title">购物车</div>
+            </li>
+            <li><a th:href="@{/order/history}"><img th:src="@{/images/history.png}"/></a>
+                <div class="toggle_title">订单管理</div>
+            </li>
+            <li style="height: 70px;" class="depart"></li>
+            <li><a id="loginout"><img th:src="@{/images/zhuxiao.png}"/></a>
+                <div class="toggle_title">退出登陆</div>
+            </li>
+            <li><a href="#top"><img th:src="@{/images/top01.png}"/></a>
+                <div class="toggle_title return_top">返回顶部</div>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+<div class="bg_waitsearch">
+    <div class="bg_wait img-circle">
+    </div>
+</div>
+<div class="bg_pop">
+    <div class="pop">
+        <img alt="关闭窗口" th:src="@{/images/close_pop.png}" id="close_pop" width="20px" height="20px"/>
+        <h2>添加新地址</h2>
+        <div class="address_content">
+            <div><label for="newcontent" class="control-label">地址内容:</label>
+                <input class="form-control" type="text" name="newcontent" id="newcontent"/>
+            </div>
+            <div><label for="newname" class="control-label">收件人:</label>
+                <input class="form-control" type="text" name="newname" id="newname"/>
+            </div>
+            <div><label for="newtel" class="control-label">电&nbsp;&nbsp;话:</label>
+                <input class="form-control" type="text" name="newtel" id="newtel"/>
+            </div>
+        </div>
+        <div align="center" class="btn_address">
+            <button id="addaddr_btn" class="btn btn-success form-control updateuser ">添加新地址</button>
+        </div>
+    </div>
+</div>
+<!-- 修改地址操作 -->
+<div class="bg_pop1">
+    <div class="pop1">
+        <img alt="关闭窗口" th:src="@{/images/close_pop.png}" id="close_pop1" width="20px" height="20px"/>
+        <h2>修改地址</h2>
+        <div class="address_content">
+            <div hidden>
+                <label for="user_id" class="control-label" hidden>用户ID:</label>
+                <input class="form-control" name="user_id" id="user_id" type="hidden"
+                       th:value="${session.user_session.user_id}"/>
+            </div>
+            <div><label for="content" class="control-label">地址内容:</label>
+                <input class="form-control" type="text" name="content" id="content"/>
+            </div>
+            <div><label for="name" class="control-label">收件人:</label>
+                <input class="form-control" type="text" name="name" id="name"/>
+            </div>
+            <div><label for="tel" class="control-label">电&nbsp;&nbsp;话:</label>
+                <input class="form-control" type="text" name="tel" id="tel"/>
+            </div>
+        </div>
+        <div align="center" class="btn_address">
+            <button id="updateaddr_btn" class="btn btn-success form-control updateaddr">修改地址</button>
+            <button id="deleteaddr_btn" class="btn btn-danger form-control deleteaddr">删除地址</button>
+        </div>
+    </div>
+</div>
+<!--每次操作完后的提示消息  -->
+<div class="alert alert-info alert-dismissibl tishi " id="xiaoxi" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    <span id="message" style="font-size: 14px;"></span>
+</div>
+
+</body>
+</html>

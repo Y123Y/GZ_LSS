@@ -5,7 +5,8 @@
     <script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>
     <link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
     <script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
-
+    <script th:src="@{/js/bootstrap/3.3.6/bootstrap-table.js}"></script>
+    <link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/maintop.css}" rel="stylesheet">
     <link th:href="@{/css/usermain.css}" rel="stylesheet">
 
@@ -68,7 +69,7 @@
 
                         //获取到总页数
                         totalPage = data.totalPage;
-
+                        $("#input_page").val(currentPage);
 
                     }, error: function () {
                         $(".bg_waitsearch").fadeOut("3000", function () {
@@ -85,6 +86,7 @@
                     swal("警告", "当前页为首页!", "warning");
                 } else {
                     currentPage--;
+                    $("#input_page").val(currentPage);
                     search();
                     $(".bg_waitsearch").show();
                 }
@@ -94,6 +96,7 @@
                     swal("警告", "已经是最后一页了!", "warning");
                 } else {
                     currentPage++;
+                    $("#input_page").val(currentPage);
                     search();
                     $(".bg_waitsearch").show();
                 }
@@ -101,10 +104,13 @@
 
             $("#tiao_page").click(function () {
                 var input_page = $("#input_page").val();
-                /* 			alert(input_page);
-                            return; */
+
                 if (input_page > totalPage) {
                     swal("警告", "超出最大页数范围[1--" + totalPage + "]", "warning");
+                    $("#input_page").val(1);
+                }
+                else if (input_page <= 0) {
+                    swal("警告", "小于最小页[1页]", "warning");
                     $("#input_page").val(1);
                 } else {
                     currentPage = input_page;
@@ -192,17 +198,6 @@
             z-index: 999;
         }
 
-        /* .bg_wait{
-            position:absolute;
-                 z-index: 1;
-                margin-left: 20%;
-                border-radius:5%;
-                margin-top: 2%;
-                width:800px;
-                height:600px;
-                background:url(../images/bg_wait.gif) no-repeat;
-                opacity:0.8;
-            } */
 
         .number {
             width: 50px !important;
@@ -290,17 +285,18 @@
                         <li class="dropdown-header">
                             <span style="font-weight: bold; font-size: 13px;">已有地址</span>
                         </li>
-                        <div th:if="${addresses}" th:each="address:${addresses}">
-                            <li>
-                                <a th:id="${address.address_id }" class="update_address"
-                                   th:text="${address.content}"></a>
-                            </li>
-                        </div>
-                        <div th:unless="${addresses}">
-                            <li role="presentation">
-                                <a href="#">没有地址信息</a>
-                            </li>
-                        </div>
+
+                        <li class="dropdown-header" th:if="${addresses}" th:each="address:${addresses}">
+                            <a th:id="${address.address_id }" class="update_address"
+                               th:text="${address.content}">
+                            </a>
+                        </li>
+
+
+                        <li role="presentation" class="dropdown-header" th:unless="${addresses}">
+                            <a href="#">没有地址信息</a>
+                        </li>
+
                         <li class="dropdown-header">
                             <span style="font-weight: bold; font-size: 13px;">操作</span>
                         </li>
@@ -312,54 +308,25 @@
                 </div>
             </li>
             <div id="topright">
-                <div th:if="${session.user_session.login_name}">
-                    <li>
-                        <a href="#">欢迎您,<span th:text="${session.user_session.login_name}"></span></a>
-                    </li>
-                </div>
-                <div th:unless="${session.user_session.login_name}">
-                    <li>
-                        <a th:href="@{/user/loginForm}">你好！请登录</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/user/registerForm}">免费注册</a>
-                    </li>
-                </div>
+
+                <li th:if="${session.user_session.login_name}">
+                    <a href="#">欢迎您,<span th:text="${session.user_session.login_name}"></span></a>
+                </li>
+
+                <li th:unless="${session.user_session.login_name}">
+                    <a th:href="@{/user/loginForm}">你好！请登录</a>
+                </li>
+                <li th:unless="${session.user_session.login_name}">
+                    <a th:href="@{/user/registerForm}">免费注册</a>
+                </li>
                 <li>|
                     <a th:href="@{/order/history}">我的订单</a>
                 </li>
                 <li>|
-                    <a href="">收藏夹 <i class="arrow"></i></a>
-                    <ul>
-                        <li><a th:href="@{/order/history}">已借的书籍</a></li>
-                        <li><a href="#">收藏的书籍</a></li>
-                    </ul>
-
-                </li>
-                <li>
-                    <a href="">客服服务<i class="arrow"> </i></a>
-                    <ul>
-                        <li><a href="">书籍跟踪</a></li>
-                        <li><a href="">书籍借阅</a></li>
-                    </ul>
-                </li>
-                <li>
                     <a href="">网站导航<i class="arrow"> </i></a>
                     <ul>
                         <li><a th:href="@{/user/userInfo}">个人中心</a></li>
-                        <li><a href="">业务理赔</a></li>
-                        <li><a href="">客服接待</a></li>
-                        <li><a href="">会员通道</a></li>
                     </ul>
-                </li>
-                <li>| 关注我们：
-                    <a href=""><img th:src="@{/images/sh1.png}"/></a>
-                </li>
-                <li>
-                    <a href=""><img th:src="@{/images/sh2.png}"/></a>|
-                </li>
-                <li>
-                    <a href="">手机版<img th:src="@{/images/i_tel.png}" style="margin-left: 5px; vertical-align:middle;"/></a>
                 </li>
             </div>
         </div>
@@ -404,14 +371,7 @@
             <tbody>
             </tbody>
         </table>
-        <!--<div id="pageModel">-->
-            <!--<fkjava:pager-->
-                    <!--pageIndex="1"-->
-                    <!--pageSize="20"-->
-                    <!--recordCount="40"-->
-                    <!--style="digg"-->
-                    <!--submitUrl="${ctx}/employee/selectEmployee?pageIndex={0}"/>-->
-        <!--</div>-->
+
         <div style="width: 600px; margin: auto" align="center">
             <nav>
                 <ul class="pagination">
@@ -498,7 +458,7 @@
             </div>
         </div>
         <div align="center" class="btn_address">
-            <button id="addaddr_btn" class="btn btn-success form-control updateuser">添加新地址</button>
+            <button id="addaddr_btn" class="btn btn-success form-control updateuser ">添加新地址</button>
         </div>
     </div>
 </div>
@@ -508,6 +468,11 @@
         <img alt="关闭窗口" th:src="@{/images/close_pop.png}" id="close_pop1" width="20px" height="20px"/>
         <h2>修改地址</h2>
         <div class="address_content">
+            <div hidden>
+                <label for="user_id" class="control-label" hidden>用户ID:</label>
+                <input class="form-control" name="user_id" id="user_id" type="hidden"
+                       th:value="${session.user_session.user_id}"/>
+            </div>
             <div><label for="content" class="control-label">地址内容:</label>
                 <input class="form-control" type="text" name="content" id="content"/>
             </div>
@@ -530,44 +495,5 @@
     </button>
     <span id="message" style="font-size: 14px;"></span>
 </div>
-<div th:if="${message}">
-    <div class="alert alert-info alert-dismissibl tishi " role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>
-        <span style="font-size: 14px;">${requestScope.message}</span>
-    </div>
-</div>
-<!-- 吸顶 -->
-<script type="text/javascript">
-    var tit = document.getElementById("navsearch");
-    var search = document.getElementById("search");
-    var logo = document.getElementById("logo");
-    //alert(tit);
-    //占位符的位置
-    var rect = tit.getBoundingClientRect();//获得页面中导航条相对于浏览器视窗的位置
-    var inser = document.createElement("div");
-    tit.parentNode.replaceChild(inser, tit);
-    inser.appendChild(tit);
-    inser.style.height = rect.height + "px";
 
-    //获取距离页面顶端的距离
-    var titleTop = tit.offsetLeft;
-    //滚动事件
-    document.onscroll = function () {
-        //获取当前滚动的距离
-        var btop = document.body.scrollTop || document.documentElement.scrollTop;
-        //如果滚动距离大于导航条据顶部的距离
-        if (btop > titleTop) {
-            //为导航条设置fix
-            tit.className = "clearfix fix searchDiv";
-            search.className = "searchfix";
-            logo.className = "logofix";
-        } else {
-            //移除fixed
-            tit.className = "clearfix searchDiv";
-            search.className = "search";
-            logo.className = "logo";
-        }
-    }
-</script>
 </html>

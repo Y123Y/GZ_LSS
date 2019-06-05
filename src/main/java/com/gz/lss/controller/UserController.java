@@ -1,25 +1,24 @@
 package com.gz.lss.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
+import com.gz.lss.common.LssConstants;
+import com.gz.lss.pojo.Tb_address;
+import com.gz.lss.pojo.Tb_user;
+import com.gz.lss.service.AddressService;
+import com.gz.lss.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.gz.lss.common.LssConstants;
-import com.gz.lss.pojo.Tb_address;
-import com.gz.lss.pojo.Tb_user;
-import com.gz.lss.service.AddressService;
-import com.gz.lss.service.UserService;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/user")
@@ -48,12 +47,12 @@ public class UserController {
 			u.setUser_id(user.getUser_id());
 			u.setLogin_name(user.getLogin_name());
 			session.setAttribute(LssConstants.USER_SESSION, u);
-			mv.setViewName("redirect:/"+LssConstants.USERMAIN);
+			mv.setViewName("redirect:/"+ LssConstants.USERMAIN);
 		}else {
 			//登录失败
 			mv.addObject("loginname", loginname);
 			mv.addObject("message", "登录失败，用户名或密码错误");
-			mv.setViewName("forward:/"+LssConstants.USERLOGIN);
+			mv.setViewName("forward:/"+ LssConstants.USERLOGIN);
 		}
 		
 		return mv;
@@ -113,13 +112,16 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/register")
-	public String register(@Valid @ModelAttribute Tb_user user, Errors error, Model model) {
+	public String register(@Valid @ModelAttribute Tb_user user, BindingResult bindingResult, Model model) {
+
+
 		if(userService.selectUserByLoginName(user.getLogin_name()) != null) {
 			model.addAttribute("message", "注册失败，用户名已存在");
 			return LssConstants.REGISTER;
 		}
 
-		if(error.hasErrors()) {
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("message", bindingResult.getFieldError().getDefaultMessage());
 			return LssConstants.REGISTER;
 		}
 		
@@ -129,7 +131,7 @@ public class UserController {
 		}
 		
 		model.addAttribute("message", "注册成功");
-		return "redirect:/"+LssConstants.USERLOGIN;
+		return "redirect:/"+ LssConstants.USERLOGIN;
 	}
 	
 	/**
@@ -145,7 +147,8 @@ public class UserController {
 		
 		user.setPasswd(null);
 		model.addAttribute("user", user);
-		
+        List<Tb_address> addresses = addressService.getAddresses(currentUser.getUser_id());
+        model.addAttribute("addresses", addresses);
 		return LssConstants.USERINFO;
 	}
 	
@@ -186,8 +189,8 @@ public class UserController {
 		}else {
 			model.addAttribute("message", "密码修改失败");			
 		}
-		
-		return LssConstants.USERMAIN;
+		session.removeAttribute(LssConstants.USER_SESSION);
+		return LssConstants.USERLOGIN;
 	}
 
 	/**
@@ -199,6 +202,6 @@ public class UserController {
 	public String logout(HttpSession session) {
 		session.removeAttribute(LssConstants.USER_SESSION);
 
-		return "redirect:/"+LssConstants.USERLOGIN;
+		return "redirect:/"+ LssConstants.USERLOGIN;
 	}
 }

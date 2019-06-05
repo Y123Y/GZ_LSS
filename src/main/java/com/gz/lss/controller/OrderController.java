@@ -1,29 +1,23 @@
 package com.gz.lss.controller;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import com.gz.lss.common.ResultGenerator;
-import com.gz.lss.common.ResultMsg;
-import com.gz.lss.entity.OrderInfo;
+import com.alibaba.fastjson.JSON;
+import com.gz.lss.common.LssConstants;
+import com.gz.lss.pojo.*;
+import com.gz.lss.service.AddressService;
+import com.gz.lss.service.OrderService;
+import com.gz.lss.service.UserOperationService;
+import com.gz.lss.util.tag.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
-import com.gz.lss.common.LssConstants;
-import com.gz.lss.pojo.Tb_books;
-import com.gz.lss.pojo.Tb_cart;
-import com.gz.lss.pojo.Tb_order;
-import com.gz.lss.pojo.Tb_user;
-import com.gz.lss.service.OrderService;
-import com.gz.lss.service.UserOperationService;
-import com.gz.lss.util.tag.PageModel;
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/order")
@@ -32,9 +26,12 @@ public class OrderController {
 	private OrderService orderService;
 	@Autowired
 	private UserOperationService userOperationService;
-	
+	@Autowired
+	private AddressService addressService;
+
 	/**
 	 * 下单
+	 * @param order	订单信息
 	 * @return
 	 */
 	@RequestMapping("/placeOrder")
@@ -43,7 +40,9 @@ public class OrderController {
 		Tb_order order = new Tb_order();
 		order.setUser_id(currentUser.getUser_id());
 		order.setAddress_id(address_id);
-		order.setCreate_time(new Date());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(new Date());
+		order.setCreate_time(dateString);
 		order.setRemarks(remarks);
 		order.setState(1);
 		Integer order_id = orderService.addOrder(order);
@@ -96,7 +95,8 @@ public class OrderController {
 		}
 		List<Tb_order> orders = orderService.selectOrderByUser(currentUser.getUser_id(), pageModel);
 		model.addAttribute("orders", orders);
-		
+		List<Tb_address> addresses = addressService.getAddresses(currentUser.getUser_id());
+		model.addAttribute("addresses", addresses);
 		return LssConstants.ORDERHISTORY;
 	}
 	
@@ -111,5 +111,4 @@ public class OrderController {
 		
 		return "forward:history";
 	}
-
 }

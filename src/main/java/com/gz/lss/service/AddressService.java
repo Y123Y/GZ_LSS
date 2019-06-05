@@ -1,8 +1,10 @@
 package com.gz.lss.service;
 
+import com.gz.lss.pojo.Tb_address;
+
 import java.util.List;
 
-import com.gz.lss.pojo.Tb_address;
+
 
 public interface AddressService {
 	/**

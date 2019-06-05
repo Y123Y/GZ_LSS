@@ -14,9 +14,9 @@ public class Tb_order implements Serializable {
 	//用户id
 	private Integer user_id;
 	//创建时间
-	private Date create_time;
+	private String create_time;
 	//完成时间
-	private Date finish_time;
+	private String finish_time;
 	//地址id
 	private Integer address_id;
 	//派送时间
@@ -53,19 +53,19 @@ public class Tb_order implements Serializable {
 		this.user_id = user_id;
 	}
 
-	public Date getCreate_time() {
+	public String getCreate_time() {
 		return create_time;
 	}
 
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
 
-	public Date getFinish_time() {
+	public String getFinish_time() {
 		return finish_time;
 	}
 
-	public void setFinish_time(Date finish_time) {
+	public void setFinish_time(String finish_time) {
 		this.finish_time = finish_time;
 	}
 

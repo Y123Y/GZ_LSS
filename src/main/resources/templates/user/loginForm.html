@@ -1,94 +1,1 @@
-<!DOCTYPE>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}"/>
-	<script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>
-	<link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
-	<script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
-	<script th:src="@{/layer/layer.js}"></script>
-	<script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
-	<link th:href="@{/css/loginForm.css}" rel="stylesheet">
-	<title>登录界面</title>
-	<script>
-		function login(){
-			var username = $("#inputaccount").val();
-			var password = $("#inputPassword").val();
-			if(username.trim().length === 0){
-				layer.tips('请输入用户名后登录哦', '#inputaccount',{
-					tips: [2, '#3595CC']});
-				return false;
-			}
-			if(password.trim().length === 0){
-				layer.tips('请输入密码后登录哦', '#inputPassword',{
-					tips: [2, '#3595CC']});
-				return false;
-			}
-			return true;
-		}
-	</script>
-</head>
-<body>
-	<div id="header">
-		<div class="l-width">
-		 <div id="logo">
-		 	<a href="http://www.lib.ctgu.edu.cn/">
-		 		<img alt="三峡大学图书馆" th:src="@{/images/logo.png}">
-		 	</a>
-			</div>
-		 	<div id="top-nav">
-		 		<ul>
-		 			<li><a th:href="@{/worker/loginForm}" class="btn btn-info">工作人员登录</a></li>
-		 			<li><a th:href="@{/user/main}" class="btn btn-info">首页</a></li>
-		 		</ul>
-		 	</div>
-		 </div>
-	</div>
-	<div id="body">
-		<div class="login-box">
-	<div class="errormessage ">
-		<div th:if="${message}">
-			<p th:text="${message}" class="bg-warning" style="text-align: center; color: #c40000;"><span class="glyphicon glyphicon-info-sign" style="margin-right: 5px;height: 20px; line-height: 20px;"></span>
-			</p>
-		</div>
-	</div>
-		<div class="title">
-			<h2 class="pull-left">登录</h2>
-			<a class="btn btn-primary btn-xs pull-right" th:href="@{/user/registerForm}">
-  			<span class="glyphicon glyphicon-asterisk" style="margin-right:5px;"></span>注册帐号
-			</a>
-		</div>
-		<form onsubmit="return login();" class="form-horizontal" role="form" th:action="@{/user/login}" method="post">
- 			<div class="form-group">
- 				<label for="inputaccount" class="col-sm-2 control-label 
-glyphicon glyphicon-user"></label>
- 					<div class="col-sm-8">
- 					<input type="text" class="form-control" id="inputaccount" name="loginname" th:value="${loginname}" placeholder="请输入您的帐号">
- 					</div>
- 			</div>
- 			<div class="form-group">
- 				<label for="inputPassword" class="col-sm-2 control-label 
-glyphicon glyphicon-lock" ></label>
-					 <div class="col-sm-8">
- 			<input type="password" class="form-control" id="inputPassword" name="password"  placeholder="请输入您的密码">
- 					</div>
- 			</div>
- 			<div class="form-group">
- 				<div class="jz">
- 			<button type="submit" class="btn btn-success form-control">登&nbsp;&nbsp;录</button>
- 				</div>
- 			</div> 	
- 		</form>
- 		
-		</div>
-	</div>
-	<div id="footer">
-	<div class="l-width">
-		<div class="content">
-		<p>Copyright©2017
-			<a href="http://www.ctgu.edu.cn/" target="_blank">三峡大学</a>	图书馆版权所有　　地址：宜昌市大学路8号　　邮编：443002　　馆长信箱：lib@ctgu.edu.cn　　电话：0717-6392083　　</p>
-		</div>
-	</div>
-	</div>
-</body>
-</html>
+<!DOCTYPE><html xmlns:th="http://www.thymeleaf.org" lang="en"><head>    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}"/>    <script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>    <link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">    <script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>    <script th:src="@{/layer/layer.js}"></script>    <script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>    <link th:href="@{/css/loginForm.css}" rel="stylesheet">    <title>登录界面</title>    <script>        function login() {            var username = $("#inputaccount").val();            var password = $("#inputPassword").val();            if (username.trim().length === 0) {                layer.tips('请输入用户名后登录哦', '#inputaccount', {                    tips: [2, '#3595CC']                });                return false;            }            if (password.trim().length === 0) {                layer.tips('请输入密码后登录哦', '#inputPassword', {                    tips: [2, '#3595CC']                });                return false;            }            return true;        }    </script></head><body><div id="header">    <div class="l-width">        <div id="logo">            <a href="http://www.lib.ctgu.edu.cn/">                <img alt="三峡大学图书馆" th:src="@{/images/logo.png}">            </a>        </div>        <div id="top-nav">            <ul>                <li><a th:href="@{/worker/loginForm}" class="btn btn-info">工作人员登录</a></li>                <li><a th:href="@{/user/main}" class="btn btn-info">首页</a></li>            </ul>        </div>    </div></div><div id="body">    <div class="login-box">        <div class="errormessage ">            <div th:if="${message}">                <p th:text="${message}" class="bg-warning" style="text-align: center; color: #c40000;"><span                        class="glyphicon glyphicon-info-sign"                        style="margin-right: 5px;height: 20px; line-height: 20px;"></span>                </p>            </div>        </div>        <div class="title">            <h2 class="pull-left">登录</h2>            <a class="btn btn-primary btn-xs pull-right" th:href="@{/user/registerForm}">                <span class="glyphicon glyphicon-asterisk" style="margin-right:5px;"></span>注册帐号            </a>        </div>        <form onsubmit="return login();" class="form-horizontal" role="form" th:action="@{/user/login}" method="post">            <div class="form-group">                <label for="inputaccount" class="col-sm-2 control-labelglyphicon glyphicon-user"></label>                <div class="col-sm-8">                    <input type="text" class="form-control" id="inputaccount" name="loginname"                           placeholder="请输入您的帐号">                </div>            </div>            <div class="form-group">                <label for="inputPassword" class="col-sm-2 control-labelglyphicon glyphicon-lock"></label>                <div class="col-sm-8">                    <input type="password" class="form-control" id="inputPassword" name="password"                           placeholder="请输入您的密码">                </div>            </div>            <div class="form-group">                <div class="jz">                    <button type="submit" class="btn btn-success form-control">登&nbsp;&nbsp;录</button>                </div>            </div>        </form>    </div></div><div id="footer">    <div class="l-width">        <div class="content">            <p>Copyright©2017                <a href="http://www.ctgu.edu.cn/" target="_blank">三峡大学</a>                图书馆版权所有　　地址：宜昌市大学路8号　　邮编：443002　　馆长信箱：lib@ctgu.edu.cn　　电话：0717-6392083　　</p>        </div>    </div></div></body></html>

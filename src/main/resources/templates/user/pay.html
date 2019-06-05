@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script th:src="@{/js/jquery/2.0.0/jquery.min.js}"></script>
+    <link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/bootstrap/3.3.6/bootstrap.min.js}"></script>
+    <script th:src="@{/js/bootstrap/3.3.6/bootstrap-table.js}"></script>
+    <script th:src="@{/js/ArbetTable.js}"></script>
+    <script th:src="@{/js/bootstrap/locale/bootstrap-table-zh-CN.js}"></script>
+    <link th:href="@{/css/bootstrap/3.3.6/bootstrap-table.css}" rel="stylesheet">
+    <link th:href="@{/css/maintop.css}" rel="stylesheet">
+    <link th:href="@{/css/footer.css}" rel="stylesheet">
+    <link th:href="@{/css/tableset.css}" rel="stylesheet">
+
+    <link th:href="@{/css/sweetalert.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sweetalert.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/maintop.js}"></script>
+
+    <title>确认订单页面</title>
+</head>
+<body>
+<div class="wrap">
+    <div id="header">
+        <div class="top" id="top">
+            <li>
+                <div class="dropdown">
+                    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+                        我的地址
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li class="dropdown-header">
+                            <span style="font-weight: bold; font-size: 13px;">已有地址</span>
+                        </li>
+
+                        <li th:if="${addresses}" th:each="address:${addresses}">
+                            <a th:id="${address.address_id }" class="update_address"
+                               th:text="${address.content}"></a>
+                        </li>
+
+
+                        <li role="presentation" th:unless="${addresses}">
+                            <a href="#">没有地址信息</a>
+                        </li>
+
+
+                        <li class="dropdown-header">
+                            <span style="font-weight: bold; font-size: 13px;">操作</span>
+                        </li>
+
+                        <li role="presentation">
+                            <a class="pop_addressDiv">添加新地址</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <div id="topright">
+
+                <li th:if="${session.user_session.login_name}">
+                    <a href="#">欢迎您,<span th:text="${session.user_session.login_name}"></span></a>
+                </li>
+
+                <li th:unless="${session.user_session.login_name}">
+                    <a th:href="@{/user/loginForm}">你好！请登录</a>
+                </li>
+                <li th:unless="${session.user_session.login_name}">
+                    <a th:href="@{/user/registerForm}">免费注册</a>
+                </li>
+                <li>|
+                    <a th:href="@{/order/history}">我的订单</a>
+                </li>
+                <li>|
+                    <a href="">网站导航<i class="arrow"> </i></a>
+                    <ul>
+                        <li><a th:href="@{/user/userInfo}">个人中心</a></li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </div>
+
+    <!--  购物车表单-->
+    <div class="l-width">
+        <div class="l-width table_title" style="height: 50px;">
+            <h2>订单确认</h2>
+        </div>
+        <table id="tb" class="table table-striped table-bordered table-hover  table-condensed booklist">
+            <tbody>
+            <tr>
+                <th colspan="6">借阅人基本信息</th>
+            </tr>
+            <tr>
+                <th>姓名</th>
+                <th>借阅证号</th>
+                <th>联系方式</th>
+                <th>地址</th>
+                <th colspan="2">备注</th>
+            </tr>
+            <tr>
+                <td>
+                    <span th:text=" ${user.login_name}"></span>
+                </td>
+                <td>
+                    <span th:text=" ${user.card_number}"></span>
+                </td>
+                <td>
+                    <span th:text=" ${user.tel}"></span>
+                </td>
+                <td>
+                    <select th:class="form-control" th:id="select_address">
+
+                        <div th:each="address:${addresses}">
+
+                            <option  style="height: 20px" th:value="${address.address_id }" th:text="${address.content}"></option>
+
+                        </div>
+                    </select>
+                </td>
+                <td colspan="2"><input type="text" name="remarks" id="remarks" class="form-control"/></td>
+            </tr>
+            <tr>
+                <th colspan="6">订单详细信息</th>
+            </tr>
+            <tr>
+                <th>书名</th>
+                <th>作者</th>
+                <th>索取号</th>
+                <th>出版年份</th>
+                <th>出版社</th>
+                <th>数目</th>
+            </tr>
+
+            <div th:each="book:${books}" varStatus="stat">
+
+                <tr>
+                    <td style="display: none">
+                        <input type="checkbox" id="box_${stat.index}" th:value="${book.cart_id}"
+                                                     checked="checked"/></td>
+                    <td>
+                        <span th:text=" ${book.book_name}"></span>
+                    </td>
+                    <td>
+
+                        <span th:text=" ${book.book_author}"></span>
+                    </td>
+                    <td>
+                        <span th:text=" ${book.book_index}"></span>
+                    </td>
+                    <td>
+                        <span th:text=" ${book.publish_year}"></span>
+                    </td>
+                    <td>
+                        <span th:text=" ${book.book_press}"></span>
+                    </td>
+                    <td>
+                        <span th:text=" ${book.number}"></span>
+                    </td>
+                </tr>
+            </div>
+            </tbody>
+        </table>
+        <div class="l-width" style="height: 50px; background-color: #666">
+            <a id="submit_pay" class="btn btn-success btn-lg pull-right" style="margin-top: 2px; margin-right: 10px;">提交订单</a>
+            <a id="reset_pay" class="btn btn-danger btn-lg pull-right"
+               style="margin-top: 2px; margin-right: 10px;">取消订单</a></div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var boxs = $("input[type='checkbox'][id^='box_']");
+
+            $("#submit_pay").click(function () {
+                var checkedBoxs = boxs.filter(":checked");
+                var ids = checkedBoxs.map(function () {
+                    return this.value;
+                });
+                var remarksContent = $("#remarks").val();
+                var address_id = $("#select_address option:selected").val();
+                swal({
+                    title: "提示",
+                    text: "您确定要提交订单么？",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "是的，我要下单",
+                    confirmButtonColor: "#ec6c62"
+                }, function () {
+                    window.location = "../order/placeOrder?address_id=" + address_id + "&remarks=" + remarksContent + "&bookIds=" + ids.get();
+                });
+            });
+        });
+        $("#reset_pay").click(function () {
+            swal({
+                title: "提示",
+                text: "您确定取消订单么？",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "取消订单",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                swal("取消成功", "您的订单取消成功!", "success");
+                //然后从定向跳转到主页
+                setTimeout(function () {
+                    window.location = "../user/main";
+                }, 2000);
+            });
+        });
+    </script>
+
+
+    <div id="footer">
+        <div class="l-width">
+            <div class="content">
+                <p>Copyright©2017
+                    <a href="http://www.ctgu.edu.cn/" target="_blank">三峡大学</a>
+                    图书馆版权所有　　地址：宜昌市大学路8号　　邮编：443002　　馆长信箱：lib@ctgu.edu.cn　　电话：0717-6392083　　</p>
+            </div>
+        </div>
+    </div>
+    <div id="right_item">
+        <ul>
+            <li><a th:href="@{/user/main}"><img th:src="@{/images/home.png}"/></a>
+                <div class="toggle_title">返回首页</div>
+            </li>
+            <li><a th:href="@{/user/userInfo}"><img th:src="@{/images/geren.png}"/></a>
+                <div class="toggle_title">个人信息</div>
+            </li>
+            <li><a th:href="@{/userOperation/bookCart}"><img th:src="@{/images/shopcart.png}"/></a>
+                <div class="toggle_title">购物车</div>
+            </li>
+            <li><a th:href="@{/order/history}"><img th:src="@{/images/history.png}"/></a>
+                <div class="toggle_title">订单管理</div>
+            </li>
+            <li style="height: 70px;" class="depart"></li>
+            <li><a id="loginout"><img th:src="@{/images/zhuxiao.png}"/></a>
+                <div class="toggle_title">退出登陆</div>
+            </li>
+            <li><a href="#top"><img th:src="@{/images/top01.png}"/></a>
+                <div class="toggle_title return_top">返回顶部</div>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+<div class="bg_waitsearch">
+    <div class="bg_wait img-circle">
+    </div>
+</div>
+
+<div class="bg_pop">
+    <div class="pop">
+        <img alt="关闭窗口" th:src="@{/images/close_pop.png}" id="close_pop" width="20px" height="20px"/>
+        <h2>添加新地址</h2>
+        <div class="address_content">
+            <div><label for="newcontent" class="control-label">地址内容:</label>
+                <input class="form-control" type="text" name="newcontent" id="newcontent"/>
+            </div>
+            <div><label for="newname" class="control-label">收件人:</label>
+                <input class="form-control" type="text" name="newname" id="newname"/>
+            </div>
+            <div><label for="newtel" class="control-label">电&nbsp;&nbsp;话:</label>
+                <input class="form-control" type="text" name="newtel" id="newtel"/>
+            </div>
+        </div>
+        <div align="center" class="btn_address">
+            <button id="addaddr_btn" class="btn btn-success form-control updateuser ">添加新地址</button>
+        </div>
+    </div>
+</div>
+<!-- 修改地址操作 -->
+<div class="bg_pop1">
+    <div class="pop1">
+        <img alt="关闭窗口" th:src="@{/images/close_pop.png}" id="close_pop1" width="20px" height="20px"/>
+        <h2>修改地址</h2>
+        <div class="address_content">
+            <div hidden>
+                <label for="user_id" class="control-label" hidden>用户ID:</label>
+                <input class="form-control" name="user_id" id="user_id" type="hidden"
+                       th:value="${session.user_session.user_id}"/>
+            </div>
+            <div><label for="content" class="control-label">地址内容:</label>
+                <input class="form-control" type="text" name="content" id="content"/>
+            </div>
+            <div><label for="name" class="control-label">收件人:</label>
+                <input class="form-control" type="text" name="name" id="name"/>
+            </div>
+            <div><label for="tel" class="control-label">电&nbsp;&nbsp;话:</label>
+                <input class="form-control" type="text" name="tel" id="tel"/>
+            </div>
+        </div>
+        <div align="center" class="btn_address">
+            <button id="updateaddr_btn" class="btn btn-success form-control updateaddr">修改地址</button>
+            <button id="deleteaddr_btn" class="btn btn-danger form-control deleteaddr">删除地址</button>
+        </div>
+    </div>
+</div>
+<!--每次操作完后的提示消息  -->
+<div class="alert alert-info alert-dismissibl tishi " id="xiaoxi" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    <span id="message" style="font-size: 14px;"></span>
+</div>
+</body>
+</html>
