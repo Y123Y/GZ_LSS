@@ -79,3 +79,13 @@
 #app>form>input:hover{
 	background-color: #10A0B0;
 }
+
+.show_tip{
+	padding-left: 10px;
+	text-align: center;
+	color: #c82333;
+	font-size: 14px;
+	position: absolute;
+	bottom: 5px;
+	width: 100%;
+}

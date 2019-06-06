@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.gz.lss.entity.WorkerExamine;
-import com.gz.lss.pojo.Tb_admin;
-import com.gz.lss.pojo.Tb_review;
 import com.gz.lss.pojo.Tb_worker;
 
 public interface AdminOperationService {
-
 	/**
 	 * 重置工作人员的密码
 	 * @return
@@ -48,18 +45,5 @@ public interface AdminOperationService {
 	 * @return
 	 */
 	Boolean deleteWorker(Integer worker_id);
-	
-	/**
-	 * 添加管理员
-	 * @param admin 管理员信息
-	 * @return
-	 */
-	Boolean addAdmin(Tb_admin admin);
-	
-	/**
-	 * 删除管理员
-	 * @param admin_id 管理员ID
-	 * @return
-	 */
-	Boolean deleteAdmin(Integer admin_id);
+
 }

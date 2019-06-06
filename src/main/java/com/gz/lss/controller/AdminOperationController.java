@@ -38,7 +38,7 @@ public class AdminOperationController {
 	public ResultMsg getStringAndCode() {
 		Map<String, Object> map = adminOperationService.getStringAndCode();
 		if(map == null || map.isEmpty()){
-			return ResultGenerator.genFailResultMsg("数据为空");
+			return ResultGenerator.genFailResultMsg("基础数据获取失败！ 请刷新页面");
 		}else {
 			return ResultGenerator.genSuccessResultMsg(map);
 		}
@@ -53,16 +53,14 @@ public class AdminOperationController {
 	public ResultMsg getExamieOfNeed() {
 		List<WorkerExamine> requests = adminOperationService.getExamineOfNeed();
 		if (requests == null || requests.isEmpty())
-			return ResultGenerator.genFailResultMsg("数据为空");
+			return ResultGenerator.genFailResultMsg("身份审核记录为空！");
 		else{
 			return ResultGenerator.genSuccessResultMsg(requests);
 		}
 	}
 
-
-	
 	/**
-	 * 获取所有工作人员
+	 * 获取所有工作人员,不包含密码
 	 * @return
 	 */
 	@RequestMapping("/getWorkers")
@@ -83,9 +81,9 @@ public class AdminOperationController {
 	@ResponseBody
 	public ResultMsg deleteWorker(Integer worker_id) {
 		if(worker_id != null && adminOperationService.deleteWorker(worker_id)) {
-			return ResultGenerator.genSuccessResultMsg();
+			return ResultGenerator.genSuccessResultMsg("删除工作人员成功");
 		}else {
-			return ResultGenerator.genFailResultMsg("删除失败");
+			return ResultGenerator.genFailResultMsg("删除工作人员失败");
 		}
 	}
 
@@ -99,9 +97,9 @@ public class AdminOperationController {
 	@ResponseBody
 	public ResultMsg resetWorker(Integer worker_id) {
 		if(adminOperationService.ressetPasswordOfWorker(worker_id)){
-			return ResultGenerator.genSuccessResultMsg();
+			return ResultGenerator.genSuccessResultMsg("重置工作人员密码成功！");
 		}else {
-			return ResultGenerator.genFailResultMsg("重置失败");
+			return ResultGenerator.genFailResultMsg("重置工作人员密码失败！");
 		}
 	}
 
@@ -115,9 +113,9 @@ public class AdminOperationController {
 	@ResponseBody
 	public ResultMsg handleExamine(@RequestParam("review_id") Integer review_id, @RequestParam("suggestion") Boolean suggestion) {
 		if(adminOperationService.handleExamine(review_id, suggestion)){
-			return ResultGenerator.genSuccessResultMsg();
+			return ResultGenerator.genSuccessResultMsg("处理审核信息成功");
 		}else{
-			return ResultGenerator.genFailResultMsg("处理失败");
+			return ResultGenerator.genFailResultMsg("处理审核信息失败");
 		}
 	}
 
