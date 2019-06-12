@@ -71,7 +71,7 @@ public interface OrderDao {
 	 */
 	@Insert("insert into tb_order (user_id,create_time,address_id,state,remarks) "
 			+ "values(#{user_id},#{create_time},#{address_id},#{state},#{remarks})")
-	public Boolean insert(Tb_order order);
+	public int insert(Tb_order order);
 
 	/**
 	 * 
@@ -80,7 +80,7 @@ public interface OrderDao {
 	 * @return
 	 */
 	@Update("update tb_order set state = #{state} where order_id = #{order_id}")
-	public Boolean updateState(@Param("order_id") Integer order_id, @Param("state") Integer state);
+	public int updateState(@Param("order_id") Integer order_id, @Param("state") Integer state);
 	
 
 	/*======================================== worker =============================================*/

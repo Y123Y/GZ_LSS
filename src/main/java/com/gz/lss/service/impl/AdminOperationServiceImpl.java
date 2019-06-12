@@ -6,6 +6,7 @@ import com.gz.lss.dao.CTSDao;
 import com.gz.lss.entity.WorkerExamine;
 import com.gz.lss.pojo.*;
 import com.gz.lss.util.security.PasswordHelper;
+import com.gz.lss.util.security.TokenUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,13 +111,16 @@ public class AdminOperationServiceImpl implements AdminOperationService {
      */
     @Override
     public Boolean handleExamine(Integer review_id, Boolean suggestion) {
-        Boolean res;
+        boolean res;
         try {
             if (suggestion) {
                 reviewDao.passReview(review_id);
                 Tb_review review = reviewDao.selectById(review_id);
                 if (review.getWant() != null && review.getWant() != 0) {
                     res = workerDao.updateIndentity(review.getWorker_id(), review.getWant()) > 0;
+                    if (res) {
+                        TokenUtil.updateToken(review.getWorker_id());
+                    }
                 } else {
                     res = false;
                 }
@@ -167,31 +171,4 @@ public class AdminOperationServiceImpl implements AdminOperationService {
         }
         return b;
     }
-
-    @Override
-    public Boolean addAdmin(Tb_admin admin) {
-        boolean b;
-        try {
-            b = adminDao.insert(admin) > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            b = false;
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
-        return b;
-    }
-
-    @Override
-    public Boolean deleteAdmin(Integer admin_id) {
-        boolean b;
-        try {
-            b = adminDao.delete(admin_id) > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            b = false;
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
-        return b;
-    }
-
 }

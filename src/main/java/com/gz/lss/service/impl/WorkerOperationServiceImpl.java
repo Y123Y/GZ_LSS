@@ -1,5 +1,6 @@
 package com.gz.lss.service.impl;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import com.gz.lss.dao.OrderDao;
@@ -108,11 +109,15 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 		try {
 			Tb_books book = booksDao.selectBookById(detail_id);
 			if (!book.getState().equals(state_id)) {
-				booksDao.updateState(detail_id, state_id);
+				if (booksDao.updateState(detail_id, state_id) <= 0) {
+					throw new SQLException("没有记录被更新");
+				}
 			}
 
 			if (state_id == 6 || state_id == 7) {
-				orderDao.updateState(book.getOrder_id(), 2);
+				if (orderDao.updateState(book.getOrder_id(), 2) <= 0) {
+					throw new SQLException("没有记录被更新");
+				}
 			} else if (state_id == 8 || state_id == 9) {
 				Integer[] states = new Integer[]{0, 0};
 				List<Tb_books> books = booksDao.selectsByOrder(book.getOrder_id());
@@ -125,9 +130,13 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 				}
 				if (states[0] + states[1] == books.size()) {
 					if (states[0] > 0) {
-						orderDao.updateState(book.getOrder_id(), 3);
+						if (orderDao.updateState(book.getOrder_id(), 3) <= 0) {
+							throw new SQLException("没有记录被更新");
+						}
 					} else if (states[0] == 0) {
-						orderDao.updateState(book.getOrder_id(), 4);
+						if (orderDao.updateState(book.getOrder_id(), 4) <= 0) {
+							throw new SQLException("没有记录被更新");
+						}
 					}
 				}
 			}

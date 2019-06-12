@@ -62,35 +62,33 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Boolean deleteOrder(Integer order_id) {
 		try {
-			dao.delete(order_id);
+			return dao.delete(order_id) > 0;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
 	}
 
 	@Override
 	public Integer addOrder(Tb_order order) {
 		Integer id=null;
 		try {
-			dao.insert(order);
-			id=dao.selectId();
+			if (dao.insert(order) > 0) {
+				id=dao.selectId();
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
-			id=null;
 		}
 		return id;
 	}
 
 	@Override
 	public Boolean addBooks(Tb_books book) {
-		Boolean b=false;
+		boolean b = false;
 		try {
-			b=booksDao.insert(book);
+			b = booksDao.insert(book) > 0;
 		}catch(Exception e) {
 			e.printStackTrace();
-			b=false;
 		}
 		return b;
 	}
@@ -103,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			Tb_order order = dao.selectOrderById(order_id);
 			if (!order.getState().equals(state)) {
-				b = dao.updateState(order_id,state);
+				b = dao.updateState(order_id,state) > 0;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
