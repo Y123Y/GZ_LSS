@@ -34,10 +34,19 @@ public class TokenUtil {
 
     /**
      * 更新redis中的token(每次都重新生成token)
-     * @param worker_name   用户名(键)
+     * @param worker_name   用户名
      */
     public static String updateToken(String worker_name) throws Exception {
         Tb_worker worker = workerService.selectWorkerByLoginName(worker_name);
+        return updateToken(worker);
+    }
+
+    /**
+     * 更新redis中的token(每次都重新生成token)
+     * @param worker_id   用户ID
+     */
+    public static String updateToken(Integer worker_id) throws Exception {
+        Tb_worker worker = workerService.selectWorkerById(worker_id);
         return updateToken(worker);
     }
 

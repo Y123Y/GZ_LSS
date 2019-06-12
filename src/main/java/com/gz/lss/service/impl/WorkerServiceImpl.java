@@ -14,6 +14,7 @@ import com.gz.lss.pojo.Tb_review;
 import com.gz.lss.pojo.Tb_w_identity;
 import com.gz.lss.pojo.Tb_worker;
 import com.gz.lss.service.WorkerService;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Service
 @Transactional
@@ -85,12 +86,11 @@ public class WorkerServiceImpl implements WorkerService {
 			if(worker2!=null&&!worker2.getWorker_id().equals(worker.getWorker_id())) {
 				return false;
 			}
-			dao.updateNoPwd(worker);
+			return dao.updateNoPwd(worker) > 0;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
 	}
 
 	@Override
@@ -100,13 +100,13 @@ public class WorkerServiceImpl implements WorkerService {
 			if(worker==null||!worker.getPasswd().equals(PasswordHelper.getPasswordDigest(oldPasswd, worker.getSecret_key()))) {
 				return false;
 			}else {
-				dao.updatePwd(worker.getWorker_id(), PasswordHelper.getPasswordDigest(newPasswd, worker.getSecret_key()));
+				return dao.updatePwd(worker.getWorker_id(), PasswordHelper.getPasswordDigest(newPasswd, worker.getSecret_key())) > 0;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
 		}
-		return true;
 	}
 
 	@Override

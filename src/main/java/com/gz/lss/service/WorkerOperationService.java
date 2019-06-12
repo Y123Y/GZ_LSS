@@ -57,4 +57,12 @@ public interface WorkerOperationService {
 	 * @return
 	 */
 	List<Tb_books> getBooksByOrderId(Integer orderId);
+
+	/**
+	 * 该身份能否修改该状态
+	 * @param identity 身份
+	 * @param state 状态
+	 * @return
+	 */
+	Boolean checkStateIdentity(Integer identity, Integer state);
 }

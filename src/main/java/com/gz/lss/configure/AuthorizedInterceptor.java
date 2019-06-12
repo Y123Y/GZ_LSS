@@ -41,7 +41,7 @@ public class AuthorizedInterceptor implements HandlerInterceptor {
         RestController restController = handlerMethod.getBeanType().getAnnotation(RestController.class);
 
         // 默认用户没有登录
-        boolean flag = true;            /*  false 表示正式开放使用的状态 ， true 为了便于调试 */
+        boolean flag = false;            /*  false 表示正式开放使用的状态 ， true 为了便于调试 */
         // 获得请求的ServletPath
         String servletPath = request.getRequestURI();
         // 判断请求是否需要拦截

@@ -15,6 +15,7 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminDao dao;
 
+    @Autowired
     public AdminServiceImpl(AdminDao dao) {
         this.dao = dao;
     }
@@ -61,18 +62,6 @@ public class AdminServiceImpl implements AdminService {
         Tb_admin admin;
         try {
             admin = dao.select(admin_id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            admin = null;
-        }
-        return admin;
-    }
-
-    @Override
-    public Tb_admin selectAdminByAccount(String account) {
-        Tb_admin admin;
-        try {
-            admin = dao.selectByAccount(account);
         } catch (Exception e) {
             e.printStackTrace();
             admin = null;

@@ -81,7 +81,7 @@ public interface BooksDao {
 	 */
 	@Insert("insert into tb_books (order_id,book_name,book_index,state,remarks,number,book_press,book_author) "
 			+ "values(#{order_id},#{book_name},#{book_index},#{state},#{remarks},#{number},#{book_press},#{book_author})")
-	public Boolean insert(Tb_books book);
+	public int insert(Tb_books book);
 
 	/**
 	 * 
