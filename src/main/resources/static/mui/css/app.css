@@ -1,0 +1,25 @@
+.mui-bar-nav{
+	background-color: #353439;
+	
+}
+.mui-bar-nav .mui-title,.mui-bar-nav a{
+	color: #FFFFFF;
+	font-weight: 600;
+	font-size: 19px;
+}
+.list-title{
+	line-height: 32px;
+    height: 32px;
+    display: inline-block;
+}
+.mui-table-view{
+	margin-top: 20px;
+}
+.mui-table-view-cell{
+	padding: 9px 15px;
+}
+.mui-table-view .mui-media-object{
+	line-height: 32px;
+	max-width:32px ;
+	height: 32px;
+}

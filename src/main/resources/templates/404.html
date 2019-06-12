@@ -1,39 +1,35 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      th:with="basePath = ${#httpServletRequest.getScheme() + '://' +
-      #httpServletRequest.getServerName() + ':' + #httpServletRequest.getServerPort()}">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="ui-page-login">
+
 <head>
-    <meta charset="UTF-8">
-    <title>404 Not Found</title>
-    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}"/>
-    <link rel="stylesheet" th:href="@{/Matrixadmin/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/Matrixadmin/css/bootstrap-responsive.min.css}"/>
-    <link rel="stylesheet" th:href="@{/Matrixadmin/css/matrix-style.css}"/>
-    <link rel="stylesheet" th:href="@{/Matrixadmin/css/matrix-media.css}"/>
-    <link th:href="@{/Matrixadmin/font-awesome/css/font-awesome.css}" rel="stylesheet"/>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>页面找不到了</title>
+    <script th:src="@{/mui/js/mui.min.js}"></script>
+    <link th:href="@{/mui/css/mui.min.css}" rel="stylesheet"/>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}"/>
 </head>
+
 <body>
-    <div id="content" style="margin-left: 0">
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span12">
-                    <div class="widget-box">
-                        <div class="widget-title"><span class="icon"> <i class="icon-info-sign"></i> </span>
-                            <h5>Error 404</h5>
-                        </div>
-                        <div class="widget-content">
-                            <div class="error_ex">
-                                <h1>404</h1>
-                                <h3>Opps, You're lost.</h3>
-                                <p>We can not find the page you're looking for.</p>
-                                <a class="btn btn-warning btn-big" th:href="${basePath + '/user/main'}">Back to Home</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<header class="mui-bar mui-bar-nav mui-bar-transparent">
+    <a href="javascript:void(0);" class="mui-pull-left"><i class="mui-icon mui-icon-left-nav"><span
+            style="font-size: 18px;" id="back">返回</span></i></a>
+    <h1 id="chattitle" class="mui-title">页面找不到了</h1>
+</header>
+<div class="mui-content">
+</div>
+<script th:src="@{/mui/js/mui.min.js}"></script>
+<p style="text-align:center;margin-top: 10%" class="mui-row">
+    <img th:src="@{/images/404.png}" alt="404" style="width:100%;"/>
+</p>
+<div class="mui-button-row" style="margin-top: 5%">
+    <a id="back" type="button" class="mui-btn mui-btn-primary" th:href="@{/user/main}">返回首页</a>
+</div>
 </body>
+<script type="text/javascript">
+    document.getElementById("back").addEventListener("tap",function () {
+        window.history.back();
+    });
+</script>
 </html>
