@@ -101,6 +101,9 @@ public class WorkerOperationServiceImpl implements WorkerOperationService {
 	@Override
 	public Boolean checkStateIdentity(Integer identity, Integer state) {
 		Set<Integer> set = getStatesByIdentity(identity);
+		if (identity == 2){
+			set.remove(7);
+		}
 		return set.contains(state);
 	}
 
