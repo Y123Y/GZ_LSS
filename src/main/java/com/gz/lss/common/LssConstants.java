@@ -24,13 +24,7 @@ public class LssConstants {
 	public static final String ORDERHISTORY = "user/history";		//订单历史页
 	public static final String BOOKCART = "user/shopcart";			//待订书单页面
 	public static final String BOOKORDERDETERMINE = "user/pay";		//订单确认页面
-	
-	//工作人员页面
-	public static final String WORKERLOGIN = "worker/loginForm";	//登录页
-	public static final String WORKERMAIN = "worker/main";			//首页
-	public static final String WORKERREGISTER = "worker/registerForm";		//注册页
-	public static final String WORKERINFO = "worker/info";			//信息页
-	
+
 	//管理员页面
 	public static final String ADMINLOGIN = "admin/lss_admin_login";			//登录页     			@gz
 	public static final String ADMINMAIN = "admin/lss_admin";			//首页							@gz
@@ -49,7 +43,7 @@ public class LssConstants {
 	public static final String TOKEN_PAYLOAD_KEY = "worker_name";
 
 	public static String SECRET_KEY;
-	public static String SECRET_KEY_PATH = "secret.key";
+	private static String SECRET_KEY_PATH = "secret.key";
 	static {
 		String path = LssConstants.class.getClassLoader().getResource(SECRET_KEY_PATH).getFile();
 		File file = new File(path);

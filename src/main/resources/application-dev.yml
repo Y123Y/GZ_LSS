@@ -10,7 +10,7 @@ spring:
   messages:
     basename: static/messages/messages
   redis:
-    host: 127.0.0.1
+    host: 112.74.172.75
     port: 6379
     timeout: 2000
 mybatis:
