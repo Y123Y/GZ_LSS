@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
     <script th:src="@{/js/bootstrap/popper.min.js}"></script>
     <link th:href="@{/css/bootstrap/3.3.6/bootstrap.min.css}" rel="stylesheet">
     <script th:src="@{/js/bootstrap/3.3.6/bootstrap-table.js}"></script>
@@ -11,7 +11,7 @@
     <link th:href="@{/css/usermain.css}" rel="stylesheet">
 
     <link th:href="@{/css/sweetalert.css}" rel="stylesheet">
-    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+
     <script type="text/javascript" th:src="@{/js/sweetalert.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/maintop.js}"></script>
 
@@ -29,18 +29,23 @@
                     return false;
                 } else {
                     //增加等待处理
-                    search(keyword);
+                    search();
+                    $(".bg_waitsearch").show();
                     return false;
                 }
             });
-
-            function search(keyword) {
-                $(".bg_waitsearch").show();
+            var b = document.referrer;
+            //判断来路链接是否为空,若为空则什么都不提示，若不为空则为正常访问
+            console.log(b);
+            if(b != "http://localhost:8080/user/main"){
+                $("#searchButton").click();
+            }
+            function search() {
                 $.ajax({
                     url: getRealPath() + "/userOperation/selectBooks",
                     dataType: "json",
                     data: {
-                        "keyword": keyword,
+                        "keyword": keyword.val(),
                         "pageIndex": currentPage
                     },
                     type: "POST",
@@ -79,8 +84,6 @@
 
                 });
             }
-
-            search("图书");
 
             //上下页
             $("#Previous").click(function () {
@@ -142,9 +145,10 @@
             });
 
             //选中行添加到购物车
-            $("table").delegate('table tr #add', 'click', function () {
-                console.log("111111111");
+            $("body").delegate('table tr #add', 'click', function () {
+
                 var btn = $(this);//找到自身
+                console.log(btn);
                 var tr = btn.parent().parent();//找到自身所在行
                 var td = tr.find("td");//找到tr行td数组
                 var number = btn.prev().val();
@@ -186,8 +190,8 @@
                     }
                 });
             });
-
         });
+
     </script>
     <style type="text/css">
         .bg_waitsearch {
@@ -344,7 +348,7 @@
         </div>
         <div class="searchDiv" id="navsearch">
             <form th:action="@{/userOperation/selectBooks}" id="search">
-                <input type="text" id="keyword" name="keyword" placeholder="请输入关键字"
+                <input type="text" id="keyword" name="keyword" placeholder="请输入关键字" th:value="图书"
                        style="font-size: 14px; color:#666; padding-left: 10px">
                 <button id="searchButton" class="searchButton" type="submit">搜索</button>
             </form>
