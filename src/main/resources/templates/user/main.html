@@ -127,7 +127,7 @@
 
 
             //判断number是否为数字且是否符合实际
-            $("table").delegate('table tr .number', 'blur', function () {
+            $("body").delegate('table tr .number', 'blur', function () {
                 var tr = $(this).parent().parent();//找到自身所在行
                 var td = tr.find("td");//找到tr行td数组
                 var can_borrowNum = td[7].innerHTML;
@@ -294,7 +294,7 @@
                         </li>
 
                         <li class="dropdown-header" th:if="${addresses}" th:each="address:${addresses}">
-                            <a th:id="${address.address_id }" class="update_address"
+                            <a th:id="${address.address_id}" class="update_address"
                                th:text="${address.content}">
                             </a>
                         </li>
@@ -496,11 +496,6 @@
         </div>
     </div>
 </div>
-<!--每次操作完后的提示消息  -->
-<div class="alert alert-info alert-dismissibl tishi " id="xiaoxi" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
-    <span id="message" style="font-size: 14px;"></span>
-</div>
+
 
 </html>

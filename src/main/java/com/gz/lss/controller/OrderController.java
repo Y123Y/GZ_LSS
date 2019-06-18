@@ -90,9 +90,7 @@ public class OrderController {
 	public String orderHistroy(Integer pageIndex, HttpSession session, Model model) {
 		Tb_user currentUser = (Tb_user) session.getAttribute(LssConstants.USER_SESSION);
 		PageModel pageModel = new PageModel();
-		if(pageIndex != null){
-			pageModel.setPageIndex(pageIndex);
-		}
+
 		List<Tb_order> orders = orderService.selectOrderByUser(currentUser.getUser_id(), pageModel);
 		model.addAttribute("orders", orders);
 		List<Tb_address> addresses = addressService.getAddresses(currentUser.getUser_id());

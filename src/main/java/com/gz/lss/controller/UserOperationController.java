@@ -98,12 +98,9 @@ public class UserOperationController {
 	 * @return
 	 */
 	@RequestMapping("/bookCart")
-	public String bookCart(Integer pageIndex, HttpSession session, Model model) {
+	public String bookCart(HttpSession session, Model model) {
 		Tb_user currentUser = (Tb_user) session.getAttribute(LssConstants.USER_SESSION);
 		PageModel pageModel = new PageModel();
-		if(pageIndex != null){
-			pageModel.setPageIndex(pageIndex);
-		}
 		List<Tb_cart> cart = userOperationService.selectCartByUser(currentUser.getUser_id(), pageModel);
 		model.addAttribute("cart", cart);
 		model.addAttribute("pageModel", pageModel);
@@ -121,8 +118,7 @@ public class UserOperationController {
 	public String placeOrder(String bookIds, HttpSession session, Model model) {
 		Tb_user currentUser = (Tb_user) session.getAttribute(LssConstants.USER_SESSION);
 		Tb_user user = userService.selectUserById(currentUser.getUser_id());
-		user.setPasswd(null);
-		
+
 		List<Tb_address> addresses = addressService.getAddresses(user.getUser_id());
 		
 		List<Tb_cart> books = new ArrayList<>();

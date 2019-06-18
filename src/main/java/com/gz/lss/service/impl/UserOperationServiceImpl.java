@@ -71,24 +71,16 @@ public class UserOperationServiceImpl implements UserOperationService {
 
 	@Override
 	public List<Tb_cart> selectCartByUser(Integer user_id, PageModel pageModel) {
-		List<Tb_cart> list = null;
+
 		try {
-			Integer count=cartDao.countByUser(user_id);
-			if(count>0) {
-				pageModel.setRecordCount(count);
-				Map<String,Object> map=new HashMap<>();
-				map.put("user_id", user_id);
-				pageModel.setRecordCount(count);
-				map.put("pageModel", pageModel);
-				list=cartDao.selectsByUserWithPage(map);
-			}else {
-				list=cartDao.selectByUser(user_id);
-			}
+
+			return cartDao.selectByUser(user_id);
+
 		}catch(Exception e) {
 			e.printStackTrace();
-			list=null;
+
 		}
-		return list;
+		return null;
 	}
 
 	@Override

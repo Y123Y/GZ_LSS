@@ -28,19 +28,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public List<Tb_order> selectOrderByUser(Integer user_id, PageModel pageModel) {
-		List<Tb_order> list=null;
+
 		try {
-			Integer count=dao.countUser(user_id);
-			if(count>0) {
-				pageModel.setRecordCount(count);
-				Map<String,Object> map=new HashMap<String,Object>();
-				map.put("user_id", user_id);
-				map.put("pageModel", pageModel);
-				list=dao.selectsByUserWithPage(map);
-			}else {
-				list=dao.selectsByUser(user_id);
-			}
-			return list;
+			return dao.selectsByUser(user_id);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -49,14 +39,14 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<Tb_books> selectBooksByOrder(Integer order_id) {
-		List<Tb_books>  list=null;
+
 		try {
-			list=booksDao.selectsByOrder(order_id);
+			return booksDao.selectsByOrder(order_id);
 		}catch(Exception e) {
 			e.printStackTrace();
-			list=null;
+
 		}
-		return list;
+		return null;
 	}
 
 	@Override

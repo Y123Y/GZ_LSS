@@ -29,15 +29,7 @@ public interface CartDao {
 			+ "values(#{book_name},#{book_index},#{publish_year},#{number},#{book_press},#{book_author},#{user_id})")
 	public Boolean insert(Tb_cart cart) throws Exception;
 	
-	/**
-	 * 
-	 * @param map
-	 * @return
-	 */
-	@Select("select * from "+LssConstants.TBCART+" where user_id=#{user_id} "
-			+ " limit #{pageModel.firstLimitParam},#{pageModel.pageSize} ")
-	public List<Tb_cart> selectsByUserWithPage(Map<String, Object> map) throws Exception;
-	
+
 	/**
 	 * 
 	 * @param user_id
