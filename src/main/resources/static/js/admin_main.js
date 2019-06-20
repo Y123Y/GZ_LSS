@@ -172,7 +172,7 @@ $(document).ready(function () {
                         } else {
                             alert(res.message)
                         }
-                        this.show_workers_tip = (window.datas.workers.length === 0);
+                        window.datas.show_workers_tip = (window.datas.workers.length === 0);
                     },
                     error: window.error_tip
                 });
@@ -214,7 +214,7 @@ $(document).ready(function () {
                                 tmp.push(item)
                             });
                         }
-                        this.show_examines_tip = (tmp.length === 0);
+                        window.datas.show_examines_tip = (tmp.length === 0);
                     },
                     error: window.error_tip
                 });

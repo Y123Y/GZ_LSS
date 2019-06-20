@@ -24,7 +24,7 @@ $(document).ready(function(){
 	$("#close_pop1").click(function(){
 		$(".bg_pop1").hide();
 	});
-	//添加地址
+	//删除地址添加地址修改地址全部发ajax请求
 	$("#addaddr_btn").click(function(){
 		var newcontent = $("#newcontent").val();
 		var newname = $("#newname").val();
@@ -39,21 +39,19 @@ $(document).ready(function(){
 			},
 			type: "POST",
 			success: function(data){
-				setTimeout(function(){swal("操作成功", "提示:"+data.message, "success"); },100);
-				//2秒后刷新页面，足够显示swal()的信息
-				setTimeout(function(){window.location.href = window.location.href; },2000);
-
+				swal("操作成功", "提示:"+data.message, "success");
+				window.location.reload(true);
+				$("#message").html(data.message);
+				$("#xiaoxi").show();
+				$("#xiaoxi").fadeOut(3000);
 			},
 			error:function(XMLHttpRequest, textStatus, errorThrown){
-
-				setTimeout(function(){swal("未知错误!", "提示:"+XMLHttpRequest.readyState +"***"+ XMLHttpRequest.status +"***"+ XMLHttpRequest.responseText, "error");},100);
-				//2秒后刷新页面，足够显示swal()的信息
-				setTimeout(function(){window.location.href = window.location.href; },2000);
+				swal("未知错误!", "提示:"+XMLHttpRequest.readyState +"***"+ XMLHttpRequest.status +"***"+ XMLHttpRequest.responseText, "error");
 			}
 		});
 		$(".bg_pop").hide();
 	});
-	//修改地址
+	//更新
 	$("#updateaddr_btn").click(function(){
 
 		var updateuser_id = $("#user_id").val();
@@ -73,23 +71,22 @@ $(document).ready(function(){
 			},
 			type: "POST",
 			success: function(data){
-
-				setTimeout(function(){swal("操作成功", "提示:"+data.message, "success"); },100);
-                 //2秒后刷新页面，足够显示swal()的信息
-				setTimeout(function(){window.location.href = window.location.href; },2000);
+				swal("操作成功", "提示:"+data.message, "success");
+				window.location.href = window.location.href;
+				$("#message").html(data.message);
+				$("#xiaoxi").show();
+				$("#xiaoxi").fadeOut(3000);
 			},
 			error:function(XMLHttpRequest, textStatus, errorThrown){
-
-				setTimeout(function(){swal("未知错误!", "提示:"+XMLHttpRequest.readyState +"***"+ XMLHttpRequest.status +"***"+ XMLHttpRequest.responseText, "error");},100);
-				//2秒后刷新页面，足够显示swal()的信息
-				setTimeout(function(){window.location.href = window.location.href; },2000);
+				swal("未知错误!", "提示:"+XMLHttpRequest.readyState +"***"+ XMLHttpRequest.status +"***"+ XMLHttpRequest.responseText, "error");
 			}
 		});
 		$(".bg_pop1").hide();
 	});
 	//删除地址
 	$("#deleteaddr_btn").click(function(){
-
+		/*alert(select_addrId);
+		return;*/
 		$.ajax({
 			url: getRealPath()+"/address/deleteAddress",
 			dataType: "json",
@@ -98,15 +95,14 @@ $(document).ready(function(){
 			},
 			type: "POST",
 			success: function(data){
-				setTimeout(function(){swal("操作成功", "提示:"+data.message, "success"); },100);
-				//2秒后刷新页面，足够显示swal()的信息
-				setTimeout(function(){window.location.href = window.location.href; },2000);
+				swal("操作成功", "提示:"+data.message, "success");
+				window.location.href = window.location.href;
+				$("#message").html(data.message);
+				$("#xiaoxi").show();
+				$("#xiaoxi").fadeOut(3000);
 			},
 			error:function(XMLHttpRequest, textStatus, errorThrown){
-
-				setTimeout(function(){swal("未知错误!", "提示:"+XMLHttpRequest.readyState +"***"+ XMLHttpRequest.status +"***"+ XMLHttpRequest.responseText, "error");},100);
-				//2秒后刷新页面，足够显示swal()的信息
-				setTimeout(function(){window.location.href = window.location.href; },2000);
+				swal("未知错误!", "提示:"+XMLHttpRequest.readyState +"***"+ XMLHttpRequest.status +"***"+ XMLHttpRequest.responseText, "error");
 			}
 		});
 		$(".bg_pop1").hide();
